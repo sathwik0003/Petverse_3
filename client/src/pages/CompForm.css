@@ -1,0 +1,54 @@
+.compform{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 2px 8px;
+}
+
+.complabel {
+    margin: 6px 2px 3px 2px;
+}
+
+.compinput, .comptextarea {
+    border: none;
+    width: 100%;
+    border-bottom: 3px solid #000;
+    outline: none; 
+    padding: 5px 2px;
+    transition: border-color 0.3s ease; 
+    background-color: rgb(236, 233, 233);
+    resize: none;
+  }
+  
+  
+.compinput:hover, .comptextarea:hover {
+    border-color: #2b89ee;
+    
+}
+
+#complaints {
+    height: 9vh;
+    overflow-wrap: break-word;
+}
+
+.compbutton{
+    margin: 15px 0px;
+    padding: 4px 0px;
+    font-size: 1em;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    border: none;
+    background-color: rgb(196, 194, 194);
+}
+
+.compbutton:hover {
+    color: white;
+    background-color: #4097f5;
+}
+
+.success-message{
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

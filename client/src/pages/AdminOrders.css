@@ -1,0 +1,71 @@
+/* AdminOrders.css */
+
+
+  
+  .admin-orders {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .user-orders {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 2px 102px;
+    background-color: #f9f9f9;
+    transition: transform 0.3s ease-in-out;
+    margin-left: 17vw;
+    margin-top: 3vw;
+  }
+  
+  .user-orders:hover {
+    transform: scale(1.02); /* Scale up on hover */
+  }
+  
+  .order-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .order-item {
+   
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .adminproduct-image {
+    margin-right: 20px; /* Increased spacing between image and details */
+  }
+  
+  .adminproduct-image img {
+    max-width: 50px;
+    border-radius: 4px;
+    transition: transform 0.3s ease-in-out; /* Adding a smooth transition effect */
+  }
+  
+  .order-item:hover .adminproduct-image img {
+    transform: scale(1.2); /* Zoom in on hover */
+  }
+  
+  .product-details p {
+    margin: 0;
+  }
+  
+  h2, h3 {
+    color: #333;
+  }
+
+  .profile-pic {
+    background-color: #3498db; /* Set background color for the profile pic */
+    color: #fff; /* Set text color for the profile pic */
+    font-size: 20px; /* Adjust font size as needed */
+    width: 40px; /* Set width and height for the profile pic */
+    height: 40px;
+    border-radius: 50%; /* Make it a circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Add some margin for spacing */
+  }
+  

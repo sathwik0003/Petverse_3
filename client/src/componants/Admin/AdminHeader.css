@@ -1,0 +1,31 @@
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #7386D5;
+    color: white;
+    padding: 1.5vw; /* Adjust padding as needed */
+  }
+  
+  .admin-header h2 {
+    font-size: 2vw;
+  }
+  
+  .header-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .header-buttons button {
+    padding: 0.5vw 1vw;
+    font-size: 1vw;
+    background-color: #6d7fcc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .header-buttons button:hover {
+    background-color: #5c6fb8;
+  }
+  

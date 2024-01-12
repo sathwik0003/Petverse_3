@@ -1,0 +1,26 @@
+.mainproduct1{
+    display: flex;
+    flex-wrap: wrap;
+}
+.ppcard{
+    width: 20vw;
+    margin-top: 4vw;
+    margin-left: 4vw;
+}
+.starrating{
+    display: flex;
+    justify-content: center;
+}
+.buttonproducts{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5vw;
+}
+.productsfilters{
+    margin-bottom: 1vw;
+    font-size: 2vw;
+    width: 15vw;
+    display: flex;
+    margin-left: 60vw;
+    margin-top: 2vw;
+}

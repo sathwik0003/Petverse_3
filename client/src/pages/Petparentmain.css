@@ -1,0 +1,50 @@
+.parentimage {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vw;
+}
+
+.companyname {
+    display: flex;
+    justify-content: center;
+    font-size: 1vw;
+    margin-top: 2vw;
+}
+
+.parenttitle1 {
+    margin-left: 24vw;
+    margin-right: 13vw;;
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 2vw;
+    color: #003b49;
+}
+
+.firstcontentparent{
+    margin-top: 1vw;
+    border-top: 0.3px solid black;
+    padding-top: 2vw;
+    margin-left: 25vw;
+    margin-right: 25vw;
+    display: flex;
+    justify-content: space-around;
+}
+.headingparent{
+    margin-left: 27vw;
+    font-family: 'Playfair Display', serif;
+    font-size:2vw;
+    display: flex;
+    margin-top: 2vw;
+    color: #003b49;
+}
+.descparent{
+    margin-left: 28vw;
+    margin-right: 25vw;
+    font-family: 'Playfair Display', serif;
+    font-size:1.4vw;
+    display: flex;
+    margin-top: 2vw;
+    color: #003b49;
+}

@@ -1,0 +1,75 @@
+/* FAQDropdown.css */
+
+.faq-item {
+    margin-bottom: 0px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin: 8px 50px;
+    border-radius: 3px;
+  }
+  
+  .sidehead{
+    margin: 0px 50px;
+    font-size: 20px;
+  }
+
+  h1{
+    position: absolute;
+  }
+  img{
+    width: 100vw;
+    position: relative;
+    max-height: 300px;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
+  }
+
+  .heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 40px;
+    color: #FcECB9;
+  }
+
+  .heading img{
+    object-fit: cover;
+  }
+  .question {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #EC8F5E;
+    display: flex;
+    color: white;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .arrow {
+    font-size: 18px;
+    transition: transform 0.3s ease-out;
+  }
+  
+  .arrow.up {
+    transform: rotate(180deg);
+  }
+  
+  .answer {
+    padding: 2px 10px;
+    background-color: #c9c9c9;
+    transition: opacity 0.3s ease-out; /* Add a transition for opacity */
+    opacity: 0; /* Start with opacity set to 0 */
+  }
+  
+  .faq-item.open .answer {
+    opacity: 1; 
+  }
+
+  @media only screen and (max-width: 720px) {
+    .faq-item, .sidehead {
+      margin: 6px 30px;
+    }
+  
+
+  }
+  

@@ -1,0 +1,67 @@
+.adbar{
+    height: 400px;
+    display: flex;
+    justify-content: center;
+}
+/* AdminDashboard.css */
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .card {
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    height: 150px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-icon {
+    margin-right: 10px;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .card-value {
+    font-size: 1.5rem;
+  }
+  
+  .bg-7386D5 {
+    background-color: #7386d5;
+    color: #fff;
+  }
+  
+  .bg-373b44 {
+    background-color: #8e8e8e;
+    color: #fff;
+  }
+  
+  .bg-009688 {
+    background-color: #009688;
+    color: #fff;
+  }
+  
+  .bg-FF9800 {
+    background-color: #ff9800;
+    color: #fff;
+  }
+  
+  .bg-E91E63 {
+    background-color: #e91e63;
+    color: #fff;
+  }
+  

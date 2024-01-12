@@ -1,0 +1,19 @@
+#preloader {
+    background: white url('../assets/preloader.webp') no-repeat center center;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+}
+
+#catfact {
+    position: absolute;
+    top: 70%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    text-align: center;
+    font-size: 1.2rem; 
+}

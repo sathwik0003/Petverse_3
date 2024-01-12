@@ -1,0 +1,89 @@
+.paymentcontainer {
+	margin: 6px 11px;
+    max-width: 864px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.paymenth2 {
+	margin-bottom: 20px;
+	text-align: center;
+}
+.paymentform {
+	display: flex;
+	flex-direction: column;
+}
+.paymentlabel {
+	margin-top: 10px;
+	font-weight: bold;
+    
+}
+.paymentinput {
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+   
+}
+.paymentbutton {
+	padding: 10px;
+	background-color: #008CBA;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 20px;
+   margin-bottom: 36px;
+}
+.paymentbutton:hover {
+	background-color: #006080;
+}
+.paymenterror {
+	color: red;
+	margin-top: 5px;
+	font-size: 0.8rem;
+}
+.paymentfull{
+	display: flex;
+	flex-wrap: wrap;
+	height: 100%;
+}
+.paymentform{
+	width: 750px;
+	height: 100%;
+	margin: 38px;
+	background-color: white;
+	border-radius: 4px;
+}
+.paymentlegend{
+    margin-left: 29px;
+    color: #747474;
+    margin-top: 50px;
+   }
+   .paymentform2{
+    background-color: white;
+    margin-top: 50px;
+    width: 561px;
+	margin-left: 35px;
+   }
+   .paymentok{
+    width: 100px;
+    margin: 20px;
+   }
+   .paymentagain{
+    display: flex;
+    flex-wrap: wrap;
+   }
+   .paymentimg{
+    width: 70px;
+   }
+   .paymentone{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #00000040;
+         }
+         .paymenth4{
+          padding: 10px;
+          margin-left: 310px;
+         }

@@ -1,0 +1,24 @@
+.priceall {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pricemainwrapper {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1vw;
+}
+
+.textprice {
+    position: absolute;
+    top:0.5vw;
+    bottom: 0.5vw; /* Adjust the position as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    color: black; /* Add your desired text color */
+    font-size: 13px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font: bold;
+}
