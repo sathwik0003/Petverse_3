@@ -1,0 +1,42 @@
+.ucard-container {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;  /* Add padding around the entire card container */
+    margin: 2vw;
+    background-color: #ddd;
+  }
+  
+  .uprofile-pic img {
+    width: 100%;
+    max-width: 134px;  
+    border-radius: 50%; 
+    margin-right: 2vw; 
+  }
+  
+  .uuser-content {
+    flex: 2;
+    padding: 16px;
+    border-left: 1px solid black;
+  }
+  
+  .uuser-content h2 {
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 2vw;
+  }
+  
+  .uuser-content p {
+    color: #666;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .ucard-container{
+        flex-direction: column;
+    }
+  }
+  
+  

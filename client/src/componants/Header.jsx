@@ -115,7 +115,7 @@ const Header = () => {
         </div>
 
         <div className="search-bar">
-          <input type="text" placeholder="Search..."  onChange={(e) => sendData(e.target.value)}/>
+          <input type="text" placeholder="Sea. "  onChange={(e) => sendData(e.target.value)}/>
           <FontAwesomeIcon className="search-icon" icon={faSearch} />
         </div>
         <div id="myModal" className="modal" onClick={handleOutsideClick}>
