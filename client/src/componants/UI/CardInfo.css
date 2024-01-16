@@ -5,9 +5,10 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 16px;  /* Add padding around the entire card container */
+    padding: 8px;  /* Add padding around the entire card container */
     margin: 2vw;
-    background-color: #ddd;
+    background-color: #726b6b52;
+    margin-left: 20vw;
   }
   
   .uprofile-pic img {
@@ -19,8 +20,10 @@
   
   .uuser-content {
     flex: 2;
-    padding: 16px;
+    padding: 4px;
     border-left: 1px solid black;
+    border-right: 1px solid black;
+
   }
   
   .uuser-content h2 {
@@ -31,6 +34,18 @@
   
   .uuser-content p {
     color: #666;
+  }
+  .ubgrp{
+    margin-left: 2vw;
+  }
+
+   .ucm{
+    margin-top: 2vw;
+    background-color: rgb(193, 130, 35);
+  }
+   .ucd{
+    margin-top: 2vw;
+    background-color: green;
   }
 
   @media only screen and (max-width: 600px) {

@@ -52,6 +52,7 @@ import Below999 from './pages/Below999';
 import Below1999 from './pages/Below1999';
 import Below2499 from './pages/Below2499';
 import Below2999 from './pages/Below2999';
+import TableofUsers from './pages/TableofUsers';
 
 
 
@@ -129,6 +130,7 @@ const App = () => {
       <Route path="/admin/products" element={<AdminProducts />} />
       <Route path="/admin/logout" element={<AdminLogout />} />
       <Route path="/comp" element={<ComplaintsButton />} />
+      <Route path="/hi" element={<TableofUsers/>} />
     
     </Routes>
    

@@ -1,6 +1,7 @@
 import  { useState, useEffect } from 'react';
 import './Complaints.css'; // Import your CSS file
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
+import CardInfo from '../componants/UI/CardInfo';
 
 const Complaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -30,24 +31,7 @@ const Complaints = () => {
       <SidebarAdmin/>
       {loading ? (
       <p>Loading...</p>
-    ) : (
-      <ul>
-      {complaints.map((complaint) => (
-  <li key={complaint.id} className="complaint-card">
-    <div className="comprofile-pic">
-      {complaint.username && complaint.username.charAt(0).toUpperCase()}
-    </div>
-    <div className="complaint-details">
-      <div className="comusername"><b>USERNAME: </b>{complaint.username}</div>
-      <div className="complaint-text"><b>COMPLAINT: </b>{complaint.complaint}</div>
-      <div className="complaint-text"><b>PRODUCTS SUGGESTIONS: </b>{complaint.suggestions}</div>
-    </div>
-  </li>
-))}
-
-
-      </ul>
-    )}
+    ) : <CardInfo complaints={complaints}/>}
     </div>
   );
 };
