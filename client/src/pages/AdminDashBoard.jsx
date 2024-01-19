@@ -10,6 +10,7 @@ import {
 import './AdminDashboard.css';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 import AdminHeader from '../componants/Admin/AdminHeader';
+import { Link } from 'react-router-dom';
 
 const StatisticCard = ({ icon, title, initialValue, value, background }) => {
   const [displayValue, setDisplayValue] = useState(initialValue);
@@ -80,13 +81,15 @@ const AdminDashBoard = () => {
      <AdminHeader />
      </div>
       <div className="card-container" style={{marginLeft:'20vw'}}>
-        <StatisticCard
+       <Link to='/admin/users'>
+       <StatisticCard
           icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
           title="Users"
           initialValue={0}
           value={data.u1}
           background="7386D5"
         />
+       </Link>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"

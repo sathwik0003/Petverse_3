@@ -130,6 +130,7 @@ const App = () => {
       <Route path="/admin/products" element={<AdminProducts />} />
       <Route path="/admin/logout" element={<AdminLogout />} />
       <Route path="/comp" element={<ComplaintsButton />} />
+      <Route path="/admin/users" element={<TableofUsers/>} />
       <Route path="/hi" element={<TableofUsers/>} />
     
     </Routes>
