@@ -53,6 +53,8 @@ import Below1999 from './pages/Below1999';
 import Below2499 from './pages/Below2499';
 import Below2999 from './pages/Below2999';
 import TableofUsers from './pages/TableofUsers';
+import AdminInsights from './pages/AdminInsights';
+import Donutanalyse from './componants/Admin/Donutanalyse';
 
 
 
@@ -131,7 +133,8 @@ const App = () => {
       <Route path="/admin/logout" element={<AdminLogout />} />
       <Route path="/comp" element={<ComplaintsButton />} />
       <Route path="/admin/users" element={<TableofUsers/>} />
-      <Route path="/hi" element={<TableofUsers/>} />
+      <Route path="/hi" element={<AdminInsights/>} />
+      <Route path="/hii" element={<Donutanalyse/>} />
     
     </Routes>
    
