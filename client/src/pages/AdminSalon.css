@@ -1,0 +1,41 @@
+/* AdminSalon.css */
+
+.scontainer {
+    margin-left: 21rem;
+    width: 72rem;
+  }
+  
+  .saloon-container1 {
+    display: flex;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+  
+  .image-container {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .content-container {
+    flex: 2;
+    margin-left: 20px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .scontainer {
+      margin-left: 0;
+      width: 100%;
+    }
+  
+    .saloon-container1 {
+      flex-direction: column;
+    }
+  
+    .image-container {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  }
+  
