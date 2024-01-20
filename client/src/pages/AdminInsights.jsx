@@ -128,10 +128,10 @@ const AdminInsights = () => {
                <div style={{width:'20vw'}}>
                <Doughnut data={chartData} options={chartOptions2} />
                </div>
-               <div>
+               <div style={{width:'20vw'}}>
                <Doughnut data={chartData} options={chartOptions2} />
                </div>
-               <div>
+               <div style={{width:'20vw'}}>
                <Doughnut data={chartData} options={chartOptions2} />
                </div>
             </div>
