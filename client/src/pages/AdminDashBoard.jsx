@@ -92,11 +92,11 @@ const AdminDashBoard = () => {
         </Link>
         <Link to='/admin/brands'>
           <StatisticCard
-            style={{ backgroundColor: "#83daa6" }}
             icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
             title="Brands"
             initialValue={0}
             value={data.u1}
+            background="7386D6"
           />
         </Link>
 
