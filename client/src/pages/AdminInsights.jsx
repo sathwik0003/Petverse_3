@@ -111,9 +111,11 @@ const AdminInsights = () => {
 
     return (
         <div >
+       
             <div style={{marginLeft:'20vw'}}>
                 <AdminHeader/>
             </div>
+            <h1 style={{marginLeft:'45vw', marginTop:'1vw', fontFamily:'fangsong'}}>ADMIN INSIGHTS</h1>
             <SidebarAdmin />
             <div style={{ display: "flex", flexWrap: 'wrap', justifyContent: 'center', marginLeft: '24vw' }}>
                 <div style={{ display: 'flex', width: '50vw', border: '1px solid black', padding: '30px', borderRadius: '3vw', margin: "2vw", height: '25vw' }}>

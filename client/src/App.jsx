@@ -55,6 +55,7 @@ import Below2999 from './pages/Below2999';
 import TableofUsers from './pages/TableofUsers';
 import AdminInsights from './pages/AdminInsights';
 import Donutanalyse from './componants/Admin/Donutanalyse';
+import TableofBrands from './pages/TableofBrands';
 
 
 
@@ -133,7 +134,8 @@ const App = () => {
       <Route path="/admin/logout" element={<AdminLogout />} />
       <Route path="/comp" element={<ComplaintsButton />} />
       <Route path="/admin/users" element={<TableofUsers/>} />
-      <Route path="/hi" element={<AdminInsights/>} />
+      <Route path="/admin/brands" element={<TableofBrands/>} />
+      <Route path="/admin/dashboard/insights" element={<AdminInsights/>} />
       <Route path="/hii" element={<Donutanalyse/>} />
     
     </Routes>

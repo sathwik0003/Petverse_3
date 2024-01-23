@@ -10,11 +10,8 @@ const AdminHeader = () => {
         <Link to="/admin/dashboard">
           <button>Dashboard</button>
         </Link>
-        <Link to="/admin/dashboard/line" >
-          <button>Analyse Graph</button>
-        </Link>
-        <Link to="/admin/dashboard/bar">
-          <button>Analyse Bar</button>
+        <Link to="/admin/dashboard/insights" >
+          <button>Insights</button>
         </Link>
       </div>
     </div>

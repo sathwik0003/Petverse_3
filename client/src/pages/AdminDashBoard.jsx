@@ -77,19 +77,29 @@ const AdminDashBoard = () => {
   return (
     <>
       <SidebarAdmin />
-     <div style={{marginLeft:'20vw'}}>
-     <AdminHeader />
-     </div>
-      <div className="card-container" style={{marginLeft:'20vw'}}>
-       <Link to='/admin/users'>
-       <StatisticCard
-          icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
-          title="Users"
-          initialValue={0}
-          value={data.u1}
-          background="7386D5"
-        />
-       </Link>
+      <div style={{ marginLeft: '20vw' }}>
+        <AdminHeader />
+      </div>
+      <div className="card-container" style={{ marginLeft: '20vw' }}>
+        <Link to='/admin/users'>
+          <StatisticCard
+            icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
+            title="Users"
+            initialValue={0}
+            value={data.u1}
+            background="7386D5"
+          />
+        </Link>
+        <Link to='/admin/brands'>
+          <StatisticCard
+            style={{ backgroundColor: "#83daa6" }}
+            icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
+            title="Brands"
+            initialValue={0}
+            value={data.u1}
+          />
+        </Link>
+
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"
