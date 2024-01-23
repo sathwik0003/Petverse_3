@@ -915,7 +915,7 @@ app.delete('/delete/users/:username', async (req, res) => {
   }
 });
 
-// admin users fetch
+// admin brands fetch
 app.get('/fetchbrands',async(req,res)=>{
   try{
     const brands = await Brand.find();
@@ -926,7 +926,7 @@ app.get('/fetchbrands',async(req,res)=>{
   }
 })
 
-// admin users delete
+// admin brands delete
 app.delete('/delete/brands/:brandname', async (req, res) => {
   const brandname = req.params.brandname;
 
