@@ -945,6 +945,42 @@ app.delete('/delete/brands/:brandname', async (req, res) => {
   }
 });
 
+// functiom for brand Insights
+app.get('/fetchbrandinsights', async (req, res) => {
+  try {
+    const brandProducts = await BrandProducts.find().exec();
+
+    const brandTotalItems = {};
+
+    brandProducts.forEach((product) => {
+      const { brandcode, available } = product;
+
+      if (!brandTotalItems[brandcode]) {
+        brandTotalItems[brandcode] = 0;
+      }
+
+      brandTotalItems[brandcode] += available;
+    });
+
+    const brands = await Brand.find().exec();
+
+    brands.forEach((brand) => {
+      const { brandcode } = brand;
+
+      if (brandTotalItems[brandcode]) {
+        brand.totalItems = brandTotalItems[brandcode];
+      } else {
+        brand.totalItems = 0;
+      }
+    });
+
+    console.log(brandTotalItems);
+    res.json(brandTotalItems);
+  } catch (error) {
+    console.error('Error fetching data about brands:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 
