@@ -77,7 +77,7 @@ const AdminViewBar = () => {
             <SidebarAdmin />
             <div style={{ marginLeft: '20vw', width: '85vw' }}>
             <AdminHeader/>
-                <div className='adbar' style={{width:'65vw', paddingLeft:'10vw'}}>
+                <div className='adbar' style={{width:'65vw', paddingLeft:'10vw', margin:'2vw'}}>
                     <Bar data={chartData} options={chartOptions} style={{height:'350px'}}/>
                 </div>
             </div>

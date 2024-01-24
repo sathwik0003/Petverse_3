@@ -885,6 +885,67 @@ app.post('/search1/:e', async (req, res) => {
   }
 });
 
+// admin users fetch
+app.get('/fetchusers',async(req,res)=>{
+  try{
+    const users = await User.find();
+    res.json(users);
+  }catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+// admin users delete
+app.delete('/delete/users/:username', async (req, res) => {
+  const username = req.params.username;
+
+  try {
+   
+    const deletedUser= await User.findOneAndDelete({username:username});
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully', deletedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// admin brands fetch
+app.get('/fetchbrands',async(req,res)=>{
+  try{
+    const brands = await Brand.find();
+    res.json(brands);
+  }catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+// admin brands delete
+app.delete('/delete/brands/:brandname', async (req, res) => {
+  const brandname = req.params.brandname;
+
+  try {
+   
+    const deletedBrand= await Brand.findOneAndDelete({brandname:brandname});
+
+    if (!deletedBrand) {
+      return res.status(404).json({ message: 'Brand not found' });
+    }
+
+    res.status(200).json({ message: 'Brand deleted successfully', deletedBrand });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 
 
 

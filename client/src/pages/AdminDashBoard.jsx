@@ -10,6 +10,7 @@ import {
 import './AdminDashboard.css';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 import AdminHeader from '../componants/Admin/AdminHeader';
+import { Link } from 'react-router-dom';
 
 const StatisticCard = ({ icon, title, initialValue, value, background }) => {
   const [displayValue, setDisplayValue] = useState(initialValue);
@@ -76,17 +77,29 @@ const AdminDashBoard = () => {
   return (
     <>
       <SidebarAdmin />
-     <div style={{marginLeft:'20vw'}}>
-     <AdminHeader />
-     </div>
-      <div className="card-container" style={{marginLeft:'20vw'}}>
-        <StatisticCard
-          icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
-          title="Users"
-          initialValue={0}
-          value={data.u1}
-          background="7386D5"
-        />
+      <div style={{ marginLeft: '20vw' }}>
+        <AdminHeader />
+      </div>
+      <div className="card-container" style={{ marginLeft: '20vw' }}>
+        <Link to='/admin/users'>
+          <StatisticCard
+            icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
+            title="Users"
+            initialValue={0}
+            value={data.u1}
+            background="7386D5"
+          />
+        </Link>
+        <Link to='/admin/brands'>
+          <StatisticCard
+            icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
+            title="Brands"
+            initialValue={0}
+            value={data.u1}
+            background="7386D6"
+          />
+        </Link>
+
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"

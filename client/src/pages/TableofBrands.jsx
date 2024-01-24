@@ -25,73 +25,73 @@ import {
     Alert,
     AlertIcon,
 } from '@chakra-ui/react';
-import { FaExclamationCircle, FaTrash, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaTruck } from 'react-icons/fa';
+import { FaExclamationCircle, FaTrash, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaTruck, FaBoxOpen, FaShoppingBag } from 'react-icons/fa';
 import { RiCheckboxCircleFill } from 'react-icons/ri';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 
-const TableofUsers = () => {
-    const [users, setUsers] = useState([]);
+const TableofBrands = () => {
+    const [brands, setBrands] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedBrand, setSelectedBrand] = useState(null);
     const [confirmationEmail, setConfirmationEmail] = useState('');
     const [isEmailMatch, setIsEmailMatch] = useState(false);
     const [deleteSuccess, setDeleteSuccess] = useState(false);
 
     useEffect(() => {
-        fetchUsers();
+        fetchBrands();
     }, []);
 
-    const fetchUsers = async () => {
+    const fetchBrands = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/fetchusers`);
+            const response = await fetch(`http://localhost:3001/fetchbrands`);
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
             const data = await response.json();
-            setUsers(data);
+            setBrands(data);
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.error('Error fetching brands:', error);
         }
     };
 
-    const handleDelete = (user) => {
-        setSelectedUser(user);
+    const handleDelete = (brand) => {
+        setSelectedBrand(brand);
         onOpen();
     };
 
-    const deleteUser = async (username) => {
+    const deleteBrand = async (brandname) => {
         try {
-            const response = await fetch(`http://localhost:3001/delete/users/${username}`, {
+            const response = await fetch(`http://localhost:3001/delete/brands/${brandname}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                console.log('User deleted successfully');
-                fetchUsers();
+                console.log('Brand deleted successfully');
+                fetchBrands();
                 setDeleteSuccess(true);
                 setTimeout(() => {
                     setDeleteSuccess(false);
                     onClose();
                 }, 2000);
             } else {
-                console.error('Failed to delete user');
+                console.error('Failed to delete brand');
             }
         } catch (error) {
-            console.error('Error during user deletion:', error);
+            console.error('Error during brand deletion:', error);
         }
     };
 
     const handleConfirmation = () => {
-        if (confirmationEmail === selectedUser.email) {
-            deleteUser(selectedUser.username);
+        if (confirmationEmail === selectedBrand.email) {
+            deleteBrand(selectedBrand.brandname);
         } else {
-            console.error('Email does not match user email');
+            console.error('Email does not match brand email');
         }
     };
 
     const handleEmailChange = (e) => {
         setConfirmationEmail(e.target.value);
-        setIsEmailMatch(e.target.value === selectedUser.email);
+        setIsEmailMatch(e.target.value === selectedBrand.email);
     };
 
     return (
@@ -100,11 +100,11 @@ const TableofUsers = () => {
             <ChakraProvider>
                 <TableContainer overflowX="auto" marginLeft="20vw">
                     <Table variant="striped" colorScheme="blue" size="sm">
-                        <TableCaption>User Information</TableCaption>
+                        <TableCaption>Brand Information</TableCaption>
                         <Thead>
                             <Tr>
                                 <Th fontSize="1vw">S. No</Th>
-                                <Th fontSize="1vw">Username</Th>
+                                <Th fontSize="1vw">Brandname</Th>
                                 <Th fontSize="1vw">Email</Th>
                                 <Th fontSize="1vw">Phone</Th>
                                 <Th fontSize="1vw">Address</Th>
@@ -112,24 +112,24 @@ const TableofUsers = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {users.map((user, index) => (
-                                <Tr key={user._id}>
+                            {brands.map((brand, index) => (
+                                <Tr key={brand._id}>
                                     <Td fontSize="1vw">{index + 1}</Td>
                                     <Td fontSize="1vw">
-                                        <Icon as={FaUser} mr="2" />
-                                        {user.fullname}
+                                        <Icon as={FaBoxOpen} mr="2" />
+                                        {brand.brandname}
                                     </Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaEnvelope} mr="2" />
-                                        {user.email}
+                                        {brand.email}
                                     </Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaPhone} mr="2" />
-                                        {user.phoneNumber}
+                                        {brand.phoneNumber}
                                     </Td>
                                     <Td fontSize="1vw">
-                                        <Button colorScheme="blue" size="sm" leftIcon={<FaTruck />}>
-                                            Orders
+                                        <Button colorScheme="blue" size="sm" leftIcon={<FaShoppingBag />}>
+                                            Products
                                         </Button>
                                     </Td>
                                     <Td fontSize="1vw">
@@ -138,7 +138,7 @@ const TableofUsers = () => {
                                             colorScheme="red"
                                             size="sm"
                                             leftIcon={<FaTrash />}
-                                            onClick={() => handleDelete(user)}
+                                            onClick={() => handleDelete(brand)}
                                         >
                                             Delete
                                         </Button>
@@ -185,7 +185,7 @@ const TableofUsers = () => {
                             <ModalBody>
                                 <Alert status="success">
                                     <AlertIcon as={RiCheckboxCircleFill} color="green.500" />
-                                    User deleted successfully.
+                                    Brand deleted successfully.
                                 </Alert>
                             </ModalBody>
                         </ModalContent>
@@ -196,4 +196,4 @@ const TableofUsers = () => {
     );
 };
 
-export default TableofUsers;
+export default TableofBrands;
