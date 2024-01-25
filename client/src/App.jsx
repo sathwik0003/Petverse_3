@@ -56,7 +56,7 @@ import TableofUsers from './pages/TableofUsers';
 import AdminInsights from './pages/AdminInsights';
 import Donutanalyse from './componants/Admin/Donutanalyse';
 import TableofBrands from './pages/TableofBrands';
-
+import AdminBrandProducts from './pages/AdminBrandProducts';
 
 
 
@@ -74,6 +74,7 @@ const App = () => {
       <Route path="/user/wishlist/:userid" element={<WishlistPage />} />
       <Route path="/user/cart/:userid" element={<AddtoCart />} />
       <Route path="/user/parenting/:id/:userid" element={<Petparentmain />} />
+      <Route path="/brands/:brandname/products" element={<AdminBrandProducts />} />
     
       <Route path="/user/products/:userid?/:attribute/:division?" element={<Productpage />} />
       <Route path="/user/products/:userid?/699" element={<Below699 />} />

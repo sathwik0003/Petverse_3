@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Table,
     Thead,
@@ -128,9 +129,11 @@ const TableofBrands = () => {
                                         {brand.phoneNumber}
                                     </Td>
                                     <Td fontSize="1vw">
+                                    <Link path={`/brands/${brand.brandname}/products`}>
                                         <Button colorScheme="blue" size="sm" leftIcon={<FaShoppingBag />}>
                                             Products
                                         </Button>
+                                        </Link>
                                     </Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaExclamationCircle} color="red.500" mr="2" />
