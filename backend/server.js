@@ -982,6 +982,18 @@ app.get('/fetchbrandinsights', async (req, res) => {
   }
 });
 
+app.get('/fetchproducts/:brandname', async (req, res) => {
+  const brandname = req.params.brandname;
+  console.log(brandname)
+  try {
+    // Replace with your database query to fetch products for the given brand
+    const products = await Brand.find({brandname:brandname});
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 
