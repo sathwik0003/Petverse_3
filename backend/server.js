@@ -950,6 +950,42 @@ app.delete('/delete/brands/:brandname', async (req, res) => {
   }
 });
 
+// functiom for brand Insights
+app.get('/fetchbrandinsights', async (req, res) => {
+  try {
+    const brandProducts = await BrandProducts.find().exec();
+
+    const brandTotalItems = {};
+
+    brandProducts.forEach((product) => {
+      const { brandcode, available } = product;
+
+      if (!brandTotalItems[brandcode]) {
+        brandTotalItems[brandcode] = 0;
+      }
+
+      brandTotalItems[brandcode] += available;
+    });
+
+    const brands = await Brand.find().exec();
+
+    brands.forEach((brand) => {
+      const { brandcode } = brand;
+
+      if (brandTotalItems[brandcode]) {
+        brand.totalItems = brandTotalItems[brandcode];
+      } else {
+        brand.totalItems = 0;
+      }
+    });
+
+    console.log(brandTotalItems);
+    res.json(brandTotalItems);
+  } catch (error) {
+    console.error('Error fetching data about brands:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.get('/fetchproducts/:brandname', async (req, res) => {
   const brandname = req.params.brandname;
@@ -964,6 +1000,49 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+const user10 = async () => {
+  try {
+    const cursor = await Order.find({}).sort({ userId: 1, totalAmount: -1 }).cursor();
+    let result = [];
+    let currentUserId = null;
+    let currentUserTotal = 0;
+
+    await cursor.eachAsync(doc => {
+      if (doc.userId !== currentUserId) {
+        if (currentUserId !== null) {
+          result.push({ userId: currentUserId, totalPrices: currentUserTotal });
+        }
+        currentUserId = doc.userId;
+        currentUserTotal = doc.totalAmount;
+      } else {
+        currentUserTotal += doc.totalAmount;
+      }
+    });
+
+    // Push the last user
+    if (currentUserId !== null) {
+      result.push({ userId: currentUserId, totalPrices: currentUserTotal });
+    }
+
+    // Sort the result array by totalPrices in descending order
+    result.sort((a, b) => b.totalPrices - a.totalPrices);
+
+    // Get the top 10
+    const top10 = result.slice(0, 10);
+
+    console.log('Top 10 Usernames with Highest Total Prices:', top10);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Call the function
+user10();
+
+
+
 
 
 
