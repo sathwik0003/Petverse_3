@@ -74,6 +74,9 @@ const brandSchema = new mongoose.Schema({
       required:true
       
     },
+    total:{
+      type:Number
+    },
     available:{
       type: Number,
       required:true
@@ -398,6 +401,7 @@ const brandSchema = new mongoose.Schema({
       description :req.body.description,
       pet_category:req.body.pet_category,
       product_category:req.body.product_category,
+      total:req.body.quantity,
       available:req.body.quantity,
       price:req.body.price,
       image: req.body.image,
@@ -445,6 +449,7 @@ const brandSchema = new mongoose.Schema({
           description: req.body.description,
           pet_category: req.body.pet_category,
           product_category: req.body.product_category,
+          total:req.body.quantity,
           available: req.body.quantity,
           price: req.body.price,
           image: req.body.image,
@@ -987,7 +992,8 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
   console.log(brandname)
   try {
     // Replace with your database query to fetch products for the given brand
-    const products = await Brand.find({brandname:brandname});
+    const products = await BrandProducts.find({brandcode:brandname});
+    console.log(products)
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);

@@ -129,12 +129,13 @@ const TableofBrands = () => {
                                         {brand.phoneNumber}
                                     </Td>
                                     <Td fontSize="1vw">
-                                    <Link path={`/brands/${brand.brandname}/products`}>
                                         <Button colorScheme="blue" size="sm" leftIcon={<FaShoppingBag />}>
-                                            Products
+                                            <Link to={`/brands/${brand.brandcode}/products`}>
+                                                Products
+                                            </Link>
                                         </Button>
-                                        </Link>
                                     </Td>
+
                                     <Td fontSize="1vw">
                                         <Icon as={FaExclamationCircle} color="red.500" mr="2" />
                                         <Button
