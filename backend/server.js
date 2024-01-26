@@ -996,6 +996,49 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
 });
 
 
+const user10 = async () => {
+  try {
+    const cursor = await Order.find({}).sort({ userId: 1, totalAmount: -1 }).cursor();
+    let result = [];
+    let currentUserId = null;
+    let currentUserTotal = 0;
+
+    await cursor.eachAsync(doc => {
+      if (doc.userId !== currentUserId) {
+        if (currentUserId !== null) {
+          result.push({ userId: currentUserId, totalPrices: currentUserTotal });
+        }
+        currentUserId = doc.userId;
+        currentUserTotal = doc.totalAmount;
+      } else {
+        currentUserTotal += doc.totalAmount;
+      }
+    });
+
+    // Push the last user
+    if (currentUserId !== null) {
+      result.push({ userId: currentUserId, totalPrices: currentUserTotal });
+    }
+
+    // Sort the result array by totalPrices in descending order
+    result.sort((a, b) => b.totalPrices - a.totalPrices);
+
+    // Get the top 10
+    const top10 = result.slice(0, 10);
+
+    console.log('Top 10 Usernames with Highest Total Prices:', top10);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Call the function
+user10();
+
+
+
+
+
 
 
 
