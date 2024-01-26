@@ -147,6 +147,8 @@ const AddSalon = () => {
 
   return (
     <ChakraProvider>
+    <SidebarAdmin/>
+      <div style={{marginLeft:'24vw'}}>
       <Container maxW="xl" centerContent>
         <Box p={8} boxShadow="xl" borderRadius="md" bg="white" style={{ width: '55vw' }}>
           <Heading as="h2" size="xl" mb={6}>
@@ -255,6 +257,7 @@ const AddSalon = () => {
           </form>
         </Box>
       </Container>
+      </div>
     </ChakraProvider>
   );
 };
