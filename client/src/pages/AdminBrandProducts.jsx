@@ -57,16 +57,19 @@ const AdminBrandProducts = () => {
                 {product.description}
               </Text>
               <Text fontSize="md" mb="2">
-                <strong>Availability:</strong> {product.available ? 'In Stock' : 'Out of Stock'}
+                <strong>Availability:</strong> {product.total}
               </Text>
               <Text fontSize="md" mb="2">
-                <strong>Quantity:</strong> {product.quantity}
+                <strong>Quantity:</strong> {product.available}
+              </Text>
+              <Text fontSize="md" mb="2">
+                <strong>Sold:</strong> {product.total-product.available}
               </Text>
               <Text fontSize="lg" mb="2">
                 <strong>Price:</strong> ${product.price}
               </Text>
               <Text fontSize="md">
-                <strong>Category:</strong> {product.category}
+                <strong>Category:</strong> {product.product_category}
               </Text>
 
               {/* Delete Button */}
