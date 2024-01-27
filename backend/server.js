@@ -1001,9 +1001,9 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
   }
 });
 
-
-const user10 = async () => {
+app.get('/fetchusersinsights',async (req,res) => {
   try {
+    const usertotalprices = {};
     const cursor = await Order.find({}).sort({ userId: 1, totalAmount: -1 }).cursor();
     let result = [];
     let currentUserId = null;
@@ -1031,15 +1031,22 @@ const user10 = async () => {
 
     // Get the top 10
     const top10 = result.slice(0, 10);
+    top10.forEach((top)=>{
+      const user = top.userId;
+      usertotalprices[user] = top.totalPrices;
+    })
 
-    console.log('Top 10 Usernames with Highest Total Prices:', top10);
+    res.json(usertotalprices)
+    console.log(usertotalprices)
+
   } catch (error) {
     console.error('Error:', error);
   }
-};
+}
+)
 
-// Call the function
-user10();
+
+
 
 
 
