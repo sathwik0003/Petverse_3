@@ -5,16 +5,22 @@ const mongoose = require('mongoose');
 const dotenv= require('dotenv');
 const app = express();
 const cors = require('cors');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 const bcrypt=require('bcrypt')
+<<<<<<< HEAD
+=======
 const nodemailer = require('nodemailer');
 
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
 const multer = require('multer');
 const path=require('path')
 const csv = require('csv-parser');
 const fs = require('fs');
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
 app.use(cors());
 app.use(express.json());
 dotenv.config({
@@ -81,7 +87,11 @@ const brandSchema = new mongoose.Schema({
     },
     sold:{
       type:Number,
+<<<<<<< HEAD
+      requied:true
+=======
       require:true
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
     },
     available:{
       type: Number,
@@ -106,7 +116,7 @@ const brandSchema = new mongoose.Schema({
 
   const BrandProducts = mongoose.model('BrandProducts', brandproductSchema);
 
-  
+ 
   const salonSchema = new mongoose.Schema({
     title: {
       type: String,
@@ -133,13 +143,97 @@ const brandSchema = new mongoose.Schema({
   
     image: {
       type: String,
-      required: true
+      required:true
+     
     },
    
    
   });
 
   const Salon = mongoose.model('Salon', salonSchema);
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads');
+    },
+    filename: function (req, file, cb) {
+     
+      console.log(file)
+      cb(null,Date.now()+path.extname(file.originalname))
+    }
+});
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log(req.body)
+    const imageUrl = req.file.filename; // Get the filename of the uploaded image
+    console.log(imageUrl)
+    const newSalon = new Salon({
+      title: req.body.title,
+      description: req.body.description,
+      location_category: req.body.location,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address,
+      image: req.file.filename, // Storing only the filename
+    });
+    newSalon.save();
+    return res.status(200).json({ imageUrl: imageUrl });
+  } catch (error) {
+    console.error('Error during image upload:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/csvupload',upload.single('file'), (req, res) => {
+  const file = req.file;
+  console.log(file)
+
+  fs.createReadStream(file.path)
+    .pipe(csv())
+    .on('data', async (row) => {
+      try {
+        console.log(row)
+        await BrandProducts.create(row);
+      } catch (error) {
+        console.error('Error creating product:', error);
+      }
+    })
+    .on('end', () => {
+      res.send('Products added successfully');
+    });
+});
+
+
+// app.post('/api/addsalon', upload.single('image'),  (req, res) => {
+//   try {
+//     console.log('hi')
+//     console.log(req.body)
+//     console.log(req.file)
+   
+//     const newSalon = new Salon({
+//       title: req.body.title,
+//       description: req.body.description,
+//       location_category: req.body.location,
+//       phoneNumber: req.body.phoneNumber,
+//       address: req.body.address,
+//       image: req.file.filename, // Storing only the filename
+//     });
+    
+//      newSalon.save();
+//     res.status(200).json({ message: 'Salon added successfully' });
+//   } catch (err) {
+//     console.error('Error during adding salon:', err);
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+
+
+
 
   const userSchema = new mongoose.Schema({
     fullname: String,
@@ -396,31 +490,33 @@ const brandSchema = new mongoose.Schema({
   });
 
 
-  app.post('/api/add', async (req, res) => {
+
+  app.post('/productupload', upload.single('image'), (req, res) => {
     try {
-      
-    console.log(req.body);
-    
-    
-    const newProduct=new BrandProducts({
-      title:req.body.title,
-      description :req.body.description,
-      pet_category:req.body.pet_category,
-      product_category:req.body.product_category,
-      total:req.body.quantity,
-      available:req.body.quantity,
-      price:req.body.price,
-      image: req.body.image,
-      brandcode:req.body.brand
-       
-    })
-    await newProduct.save();
-    
-  
-    res.status(201).json({ message: 'Product registered successfully' });;}
-     catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+      console.log(req.body)
+      const imageUrl = req.file.filename; // Get the filename of the uploaded image
+      console.log(imageUrl)
+      const newProduct=new BrandProducts({
+        title:req.body.title,
+        description :req.body.description,
+        pet_category:req.body.pet_category,
+        product_category:req.body.product_category,
+        total:req.body.quantity,
+        available:req.body.quantity,
+        price:req.body.price,
+        image: req.file.filename,
+        brandcode:req.body.brand,
+        sold:0
+         
+      })
+       newProduct.save();
+      return res.status(200).json({ imageUrl: imageUrl });
+    } catch (error) {
+      console.error('Error during image upload:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   });
 
@@ -475,33 +571,7 @@ const brandSchema = new mongoose.Schema({
     }
   });
   
-  app.post('/api/addsalon', async (req, res) => {
-    try {
-      
-    console.log(req.body);
-    
-    
-    const newSalon=new Salon({
-      title:req.body.title,
-      description :req.body.description,
-      location_category:req.body.location,
-      phoneNumber:req.body.phoneNumber,
-      address:req.body.address,
-      
-      price:req.body.price,
-      image: req.body.image,
-    
-       
-    })
-    await newSalon.save();
-    
-  
-    res.status(201).json({ message: 'Salon registered successfully' });;}
-     catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
+
 
   app.get('/api/products/:brandcode', async (req, res) => {
     try {
@@ -597,6 +667,14 @@ const brandSchema = new mongoose.Schema({
       console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+  });
+
+  app.get('/uploads/:filename', (req, res) => {
+    const { filename } = req.params;
+    // Set the path to the uploads directory where your images are stored
+    const imagePath = path.join(__dirname, 'uploads', filename);
+    // Send the image file to the client
+    res.sendFile(imagePath);
   });
 
   app.get('/api/product/:title/edit', (req, res) => {
@@ -849,6 +927,7 @@ app.put('/api/cart/:userId/:producttitle', async (req, res) => {
 
 app.get('/products/:producttitle', async (req, res) => {
   try {
+    console.log('hi')
     const { producttitle } = req.params;
     const product = await BrandProducts.findOne({title:producttitle});
 
@@ -930,6 +1009,7 @@ app.post('/api/orders/:userId', async (req, res) => {
       if (existingProduct) {
         // Update available quantity
         existingProduct.availableQuantity -= quantity;
+        existingProduct.sold+=quantity;
         await existingProduct.save();
       }
     }
@@ -938,6 +1018,33 @@ app.post('/api/orders/:userId', async (req, res) => {
   } catch (error) {
     console.error('Error placing order:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/orders', async (req, res) => {
+  try {
+    const { title } = req.query;
+    console.log(title)
+    const orders = await Order.find({ 'products.title': title });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/users/names', async (req, res) => {
+  try {
+    const { userIds } = req.body;
+    const users = await User.find({ _id: { $in: userIds } });
+    const userNames = {};
+    users.forEach(user => {
+      userNames[user._id] = user.name;
+    });
+    res.json(userNames);
+  } catch (error) {
+    console.error('Error fetching user names:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 app.post('/search1/:e', async (req, res) => {

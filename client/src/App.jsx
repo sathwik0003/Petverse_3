@@ -57,8 +57,8 @@ import AdminInsights from './pages/AdminInsights';
 import Donutanalyse from './componants/Admin/Donutanalyse';
 import TableofBrands from './pages/TableofBrands';
 import AdminBrandProducts from './pages/AdminBrandProducts';
-
-
+import CsvApp from './pages/csv';
+import SellerSingle from './pages/SellerSingle';
 
 
 const App = () => {
@@ -68,7 +68,9 @@ const App = () => {
     <>
     <Routes>
     <Route path="/user/main" element={<MainUser />} />
+    <Route path="/csv" element={<CsvApp/>} />
       <Route path="/user/main/:userid" element={<MainUser />} />
+      <Route path="/sell/:bc/:title" element={<SellerSingle />} />
       <Route path="/dogbreeds/:userid" element={<DogBreeds />} />
       <Route path="/user/dashboard/:userid" element={<UserDashBoard />} />
       <Route path="/user/wishlist/:userid" element={<WishlistPage />} />

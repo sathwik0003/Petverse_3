@@ -1,6 +1,6 @@
 import  { useState, useEffect } from 'react';
 import { Image, Button } from '@chakra-ui/react';
-
+import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import './Seller_Products.css';
 import Navbar from './NavBar';
@@ -26,7 +26,7 @@ const Seller_Products = () => {
 
     const deleteProduct = async (title) => {
         try {
-            const response = await fetch(`http://localhost:3001/api/products/${title}`, {
+            const response = await fetch(`http://localhost:3002/api/products/${title}`, {
                 method: 'DELETE',
             });
 
@@ -49,7 +49,9 @@ const Seller_Products = () => {
                 <div className="mainproduct1">
                     {filteredItems.map((item) => (
                         <div key={item.id} className="ppcard">
+                        <Link to={`/sell/${bc}/${item.title}`}>
                             <Image src={item.image} alt={item.title} objectFit="cover" boxSize="20vw" />
+                            </Link>
                             <div style={{ backgroundColor: "white" }}>
                                 <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
                                     {item.brandName}
