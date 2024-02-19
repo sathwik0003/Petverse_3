@@ -9,6 +9,11 @@ const PORT = process.env.PORT || 3001;
 const bcrypt=require('bcrypt')
 const nodemailer = require('nodemailer');
 
+const multer = require('multer');
+const path=require('path')
+const csv = require('csv-parser');
+const fs = require('fs');
+
 
 app.use(cors());
 app.use(express.json());
@@ -74,8 +79,9 @@ const brandSchema = new mongoose.Schema({
       required:true
       
     },
-    total:{
-      type:Number
+    sold:{
+      type:Number,
+      require:true
     },
     available:{
       type: Number,
