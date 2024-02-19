@@ -17,26 +17,47 @@ function ComplaintsForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    setIsSubmitted(true);
-
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 2500);
-
-    setFormData({
-      name: "",
-      complaintsEmail: "",
-      complaints: "",
-    });
+  
+    try {
+      // Send form data to the server
+      const response = await fetch("http://localhost:3001/api/complaints", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to submit complaint");
+      }
+  
+      // Display success message
+      setIsSubmitted(true);
+  
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 2500);
+  
+      // Reset form data
+      setFormData({
+        name: "",
+        complaintsEmail: "",
+        complaints: "",
+      });
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+      // Handle error
+    }
   };
+  
 
   return (
     <>
       {!isSubmitted && (
-        <form onSubmit={handleSubmit} className="compform">
+        <form onSubmit={handleSubmit} className="compform" >
           <label className='complabel'>Name</label>
           <input
           className="compinput"

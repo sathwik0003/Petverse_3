@@ -7,10 +7,20 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3002;
 const bcrypt=require('bcrypt')
+<<<<<<< HEAD
+=======
+const nodemailer = require('nodemailer');
+
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
 const multer = require('multer');
 const path=require('path')
 const csv = require('csv-parser');
 const fs = require('fs');
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
 app.use(cors());
 app.use(express.json());
 dotenv.config({
@@ -27,7 +37,6 @@ const complaintSchema = new mongoose.Schema({
     username: { type: String, required: true },
     complaint: { type: String },
     suggestions: { type: String },
-    products: { type: String }
   });
 
 const Complaint = mongoose.model('Complaint', complaintSchema);
@@ -78,7 +87,11 @@ const brandSchema = new mongoose.Schema({
     },
     sold:{
       type:Number,
+<<<<<<< HEAD
       requied:true
+=======
+      require:true
+>>>>>>> 28905ecd54d8a97224becef7df8b8d4ef365879c
     },
     available:{
       type: Number,
@@ -676,7 +689,6 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   
   
 // Define a route to fetch complaints
-
 app.get('/api/complaints', async (req, res) => {
   try {
     const complaints = await Complaint.find();
@@ -698,6 +710,70 @@ app.get('/api/orders', async (req, res) => {
   }
 });
 
+//post complaints
+app.post("/api/complaints", async (req, res) => {
+  try {
+    const { name, complaintsEmail, complaints } = req.body;
+    const newComplaint = new Complaint({
+      username: name,
+      complaint: complaintsEmail,
+      suggestions: complaints,
+    });
+
+    await newComplaint.save();
+
+    res.status(201).json({ message: "Complaint submitted successfully" });
+  } catch (error) {
+    console.error("Error submitting complaint:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//delete complaints
+app.delete('/api/complaints/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Complaint.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Complaint deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting complaint:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//send mail
+app.post('/api/sendMail', async (req, res) => {
+  const { username, complaint } = req.body;
+
+  // Create a Nodemailer transporter using SMTP
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.elasticemail.com', // SMTP host
+    port: 587, // SMTP port
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: 'programmingsoul01@gmail.com', // Your SMTP username
+      pass: '1CD368DF04529D0AE576788ABD7B3F78E10D', // Your SMTP password
+    },
+  });
+
+  //468117
+  // Email message options
+  const mailOptions = {
+    from: 'programmingsoul01@gmail.com', // Sender address
+    to: 'sathwikpendem23@gmail.com', // Receiver address
+    subject: 'complaint solved', // Subject line
+    text: `dear ${username} you're ${complaint} is resolved`, // Plain text body
+  };
+
+  try {
+    // Send email
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+    res.sendStatus(200); // Send success response to the client
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email' }); // Send error response to the client
+  }
+});
 
 app.get('/api/users/:username', async (req, res) => {
   try {
@@ -1101,9 +1177,9 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
   }
 });
 
-
-const user10 = async () => {
+app.get('/fetchusersinsights',async (req,res) => {
   try {
+    const usertotalprices = {};
     const cursor = await Order.find({}).sort({ userId: 1, totalAmount: -1 }).cursor();
     let result = [];
     let currentUserId = null;
@@ -1131,15 +1207,22 @@ const user10 = async () => {
 
     // Get the top 10
     const top10 = result.slice(0, 10);
+    top10.forEach((top)=>{
+      const user = top.userId;
+      usertotalprices[user] = top.totalPrices;
+    })
 
-    console.log('Top 10 Usernames with Highest Total Prices:', top10);
+    res.json(usertotalprices)
+    console.log(usertotalprices)
+
   } catch (error) {
     console.error('Error:', error);
   }
-};
+}
+)
 
-// Call the function
-user10();
+
+
 
 
 
