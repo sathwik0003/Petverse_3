@@ -35,7 +35,7 @@ import SalonPayment from './pages/SalonPayment';
 import FrequentlyAskedQuestions from './pages/Faq';
 import AdminViewLine from './pages/AdminViewLine';
 import AdminDashBoard from './pages/AdminDashBoard';
-import Complaints from './pages/complaints';
+import Complaints from './pages/Complaints';
 import AdminOrders from './pages/AdminOrders'
 import AdminViewBar from './pages/AdminViewBar';
 import AdminLogin from './pages/AdminLogin';
