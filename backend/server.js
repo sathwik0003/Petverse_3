@@ -15,6 +15,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 const morgan = require('morgan')
+const helmet = require('helmet')
 
 // Create a write stream (in append mode) for the log file
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
@@ -25,6 +26,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 dotenv.config({
     path:'./config.env'
