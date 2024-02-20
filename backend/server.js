@@ -14,6 +14,15 @@ const path=require('path')
 const csv = require('csv-parser');
 const fs = require('fs');
 
+const morgan = require('morgan')
+
+// Create a write stream (in append mode) for the log file
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+// Use morgan middleware with a custom stream for logging
+app.use(morgan('combined', { stream: accessLogStream }));
+
+
 
 app.use(cors());
 app.use(express.json());
