@@ -4,15 +4,15 @@ import { useParams } from 'react-router-dom';
 import Header from '../componants/Header';
 import { Image } from '@chakra-ui/react';
 
-const UserOrders = () => {
-    const {userid}=useParams()
+const UserOrders = ({userid}) => {
+   
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/orders');
+        const response = await fetch('http://localhost:3002/api/orders');
         const data = await response.json();
         setOrders(data);
       } catch (error) {
@@ -53,7 +53,7 @@ const UserOrders = () => {
 
   return (
     <>
-        <Header></Header>
+       
     
     <div className="admin-orders">
     

@@ -26,7 +26,7 @@ const Seller_Products = () => {
 
     const deleteProduct = async (title) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/products/${title}`, {
+            const response = await fetch(`http://localhost:300/api/products/${title}`, {
                 method: 'DELETE',
             });
 
