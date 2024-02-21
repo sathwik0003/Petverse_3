@@ -12,6 +12,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import SidebarAdmin from '../componants/Admin/SideBarAdmin'
 
 const AddSalon = () => {
   const [locationCategory, setLocationCategory] = useState('');
@@ -56,7 +57,7 @@ const AddSalon = () => {
       formData.append('image', file);
       console.log(file)
 
-      const response = await fetch('http://localhost:3001/upload', {
+      const response = await fetch('http://localhost:3001/uploadsalon', {
         method: 'POST',
         body: formData,
         encType:'multipart/form'

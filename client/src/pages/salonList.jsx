@@ -54,7 +54,7 @@ const SaloonList = () => {
           <>
           <div className="saloon-container1" style={{ display: 'flex' }}>
             <div className="image-container">
-              <Image src={item.image} alt="Your Image" className="img-fluid" boxSize='1rem' style={{  height: 'auto', width: '118%',
+              <Image src={`http://localhost:3001/uploads/${item.image}`} alt="Your Image" className="img-fluid" boxSize='1rem' style={{  height: 'auto', width: '118%',
     
     marginTop: '8rem',
     marginLeft: '6rem' }}

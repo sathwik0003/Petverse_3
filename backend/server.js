@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const dotenv= require('dotenv');
 const app = express();
 const cors = require('cors');
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 const bcrypt=require('bcrypt')
 
 const nodemailer = require('nodemailer');
@@ -16,7 +16,19 @@ const path=require('path')
 const csv = require('csv-parser');
 const fs = require('fs');
 
+const morgan = require('morgan')
+const helmet = require('helmet')
+
+// Create a write stream (in append mode) for the log file
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+// Use morgan middleware with a custom stream for logging
+app.use(morgan('combined', { stream: accessLogStream }));
+
+
+
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 dotenv.config({
     path:'./config.env'
@@ -82,7 +94,9 @@ const brandSchema = new mongoose.Schema({
     },
     sold:{
       type:Number,
-      required:true
+
+      require:true
+
     },
     available:{
       type: Number,
@@ -184,25 +198,53 @@ const brandSchema = new mongoose.Schema({
 
   const Salon = mongoose.model('Salon', salonSchema);
 
-  const storage = multer.diskStorage({
+  const storagesalon = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads');
     },
     filename: function (req, file, cb) {
-     
-      console.log(file)
-      cb(null,Date.now()+path.extname(file.originalname))
+        const title = req.body.title || 'untitled';
+        const address = req.body.address || 'noaddress'; 
+        
+        // Extracting the file extension
+        const ext = file.originalname.split('.').pop();
+        
+        // Constructing the filename using the title, address, and extension
+        const filename = `${title}_${address}.${ext}`;
+        
+        // Calling the callback with the constructed filename
+        cb(null, filename);
     }
 });
-const upload = multer({ storage: storage });
+const storage= multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'uploads');
+  },
+  filename: function (req, file, cb) {
+      const title = req.body.title || 'untitled';
+      const address = req.body.address || 'noaddress'; 
+      
+      // Extracting the file extension
+      const ext = file.originalname.split('.').pop();
+      
+      // Constructing the filename using the title, address, and extension
+      const filename = `${title}_${address}.${ext}`;
+      
+      // Calling the callback with the constructed filename
+      cb(null, filename);
+  }
+});
 
-app.post('/upload', upload.single('image'), (req, res) => {
+const upload = multer({ storage: storage });
+const uploadsalon = multer({ storage: storagesalon });
+
+app.post('/uploadsalon', uploadsalon.single('image'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     console.log(req.body)
-    const imageUrl = req.file.filename; // Get the filename of the uploaded image
+    const imageUrl = req.file.filename; 
     console.log(imageUrl)
     const newSalon = new Salon({
       title: req.body.title,
@@ -300,7 +342,6 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
           required:true
           
         },
-      
         price: {
           type: Number,
           required: true
@@ -683,7 +724,6 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     const { filename } = req.params;
     // Set the path to the uploads directory where your images are stored
     const imagePath = path.join(__dirname, 'uploads', filename);
-    // Send the image file to the client
     res.sendFile(imagePath);
   });
 
