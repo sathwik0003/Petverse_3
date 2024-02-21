@@ -8,7 +8,7 @@ import { faCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 const CardInfo = ({ complaints }) => {
   const handleSendMail = async (username, complaint) => {
     try {
-      const response = await fetch('http://localhost:3001/api/sendMail', {
+      const response = await fetch('http://localhost:3002/api/sendMail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const CardInfo = ({ complaints }) => {
 
   const handleMarkDone = async (id) => {
     try {
-      await fetch(`http://localhost:3001/api/complaints/${id}`, {
+      await fetch(`http://localhost:3002/api/complaints/${id}`, {
         method: 'DELETE',
       });
     } catch (error) {
