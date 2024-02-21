@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 
 
 const SalonPayment = () => {
-  const { userid } = useParams();
+  const { userid, title, service, slot } = useParams();
   
   
 
@@ -73,18 +73,39 @@ const SalonPayment = () => {
     if (!formIsValid) {
       return;
     }
+    try {
+      const response = await fetch('http://localhost:3002/salon/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userid, title, service, slot, addressValue,accountValue}),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
+      }
+
+      // Redirect or show success message
+      window.location.href=`/ticket/${userid}`
+      resetCvv();
+      resetAccount();
+      resetName();
+      resetAddress();
+      resetDate();
+    
+    } catch (error) {
+      console.error('Error:', error.message);
+      setErrors({ submit: error.message });
+    }
+  };
     console.log('ok')
-window.location.href=`/ticket/${userid}`
+
  
    
 
-    resetCvv();
-    resetAccount();
-    resetName();
-    resetAddress();
-    resetDate();
-  };
-  
+   
   
   return (
     <>

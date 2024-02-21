@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Card, Box, Text, Flex, Heading, List, ListItem } from '@chakra-ui/react';
+import { Box, Text, Flex, Heading, Image, Card } from '@chakra-ui/react';
 import Navbar from './NavBar';
 import { useParams } from 'react-router-dom';
+import bulldog from '../assets/bulldog.jpg';
+import { FaShoppingCart, FaCheckCircle } from 'react-icons/fa'; // Importing icons for available and sold sections
 
 const SellerSingle = () => {
     const { title } = useParams();
@@ -47,36 +49,43 @@ const SellerSingle = () => {
         <Box>
             <Navbar />
             {product && (
-                <Card m="2rem" display="flex" flexDirection="row" flexWrap="wrap" border="0" maxWidth="100rem" height="40rem">
+                <Card m="2rem" display="flex" flexDirection="row" flexWrap="wrap" border="0" maxWidth="100rem" height="40rem" boxShadow="md" borderRadius="md">
+                    <div style={{ border: '0.1px solid black' }}>
+                        <Image src={product.image} alt={title} boxSize='35vw' borderRadius="md" />
+                    </div>
                     <Box border="0.1px solid black"></Box>
                     <Box m="2rem" width="40vw" border="0">
-                        <Heading fontSize="2vw" mt="3vw" textAlign="center">{title}</Heading>
-                        <Heading fontSize="3vw" mt="1vw" textAlign="center">Rs.{product.price}</Heading>
+                        <Heading fontSize="2vw" mt="3vw" ml='15rem' textAlign="center">{title}</Heading>
+                        <Heading fontSize="3vw" mt="1vw" ml='17rem' textAlign="center">Rs.{product.price}</Heading>
                         <Box mt="0.5vw" border="0">
-                            <Text fontSize="1vw" m="1vw">{product.description}</Text>
+                            <Text fontSize="1vw" m="1vw" ml='13rem' w='35rem'>{product.description}</Text>
                             <Flex justifyContent="space-between" mt="1vw">
-                                <Box>
-                                    <Text fontSize="1vw" m="1vw">Available: 10</Text>
-                                    <Text fontSize="1vw" m="1vw">Sold: 0</Text>
+                                <Box style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center"} }  >
+                                    <FaCheckCircle size={20} color="green" style={{ marginRight: '0.5rem' }} />
+                                    <Text fontSize="1vw" m="1vw" style={{width: '6rem'}}>Available: 10</Text>
                                 </Box>
-                                <Box>
-                                    <Heading fontSize="1.5vw">Orders:</Heading>
-                                    <List>
-                                        {orders.map(order => (
-                                            <ListItem key={order._id} fontSize="1vw" mb="1vw">
-                                                <Text>Order ID: {order._id}</Text>
-                                                <Text>Quantity: {order.products.find(prod => prod.title === title)?.quantity}</Text>
-                                                <Text>Price: {order.products.find(prod => prod.title === title)?.price}</Text>
-                                                <Text>User Name: {order.userId}</Text>
-                                            </ListItem>
-                                        ))}
-                                    </List>
+                                <Box style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center", marginLeft:'1rem'} } >
+                                    <FaShoppingCart size={20} color="red" style={{ marginRight: '0.5rem' }} />
+                                    <Text fontSize="1vw" m="1vw" style={{width: '6rem'}}>Sold: 0</Text>
                                 </Box>
                             </Flex>
                         </Box>
                     </Box>
                 </Card>
             )}
+            <Box m="2rem">
+                <Heading fontSize="1.5vw">Orders:</Heading>
+                <Flex flexWrap="wrap">
+                    {orders.map((order, index) => (
+                        <Card key={order._id} m="1rem" width={['100%', '45%', '30%', '22%']} p="1rem" boxShadow="md" borderRadius="md"  bg="#A0AEC0">
+                            <Text fontSize="1vw">Order ID: {order._id}</Text>
+                            <Text fontSize="1vw">Quantity: {order.products.find(prod => prod.title === title)?.quantity}</Text>
+                            <Text fontSize="1vw">Price: {order.products.find(prod => prod.title === title)?.price}</Text>
+                            <Text fontSize="1vw">User Name: {order.userId}</Text>
+                        </Card>
+                    ))}
+                </Flex>
+            </Box>
         </Box>
     );
 };

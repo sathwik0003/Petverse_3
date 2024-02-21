@@ -10,7 +10,7 @@
     border-radius: 1vh;
     border-top-right-radius: 240vh;
     border-bottom-right-radius: 240vh;
-    margin-left: 2vh;
+    
    
   }
   .text-box2{
@@ -51,7 +51,8 @@
     margin-left:25px;
   }
   .saloon h1{
-    font-size: 3vw;
+    font-size: 2vw;
+    font-weight: bold;
    
   }.img{
     border-radius: 30px;
@@ -59,7 +60,7 @@
   
   .salp{
     padding-left: 3vw;
-    margin-top: 50px;
+    margin-top: 115px;
     padding-right: 50px;
     font-size: 1.5vw;
   }

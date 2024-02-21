@@ -101,7 +101,7 @@ const App = () => {
       <Route path="/saloonsingle/:title/:userid" element={<SaloonSingle />} />
       <Route path="/user/payment/:userid" element={<PaymentForm/>} />
       <Route path="/user/orders/:userid" element={<UserOrders/>} />
-      <Route path="/salon/payment/:userid" element={<SalonPayment/>} />
+      <Route path="/salon/payment/:userid/:title/:service/:slot" element={<SalonPayment/>} />
       <Route path="/ticket/:userid" element={<Ticket/>} />
       <Route path="/salons/:userid?/:location" element={<SaloonList/>} />
      

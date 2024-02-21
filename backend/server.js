@@ -7,7 +7,9 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 const bcrypt=require('bcrypt')
+
 const nodemailer = require('nodemailer');
+
 
 const multer = require('multer');
 const path=require('path')
@@ -92,7 +94,9 @@ const brandSchema = new mongoose.Schema({
     },
     sold:{
       type:Number,
+
       require:true
+
     },
     available:{
       type: Number,
@@ -149,6 +153,47 @@ const brandSchema = new mongoose.Schema({
     },
    
    
+  });
+  const salpaymentSchema = new mongoose.Schema({
+    userid: {
+      type:String,
+      required:true,
+    },
+    title:  {
+      type:String,
+      required:true,
+    },
+    service:  {
+      type:String,
+      required:true,
+    },
+    slot: {
+      type:String,
+      required:true,
+    },
+    addressValue: {
+      type:String,
+      required:true,
+    },
+    accountValue: {
+      type:String,
+      required:true,
+    },
+  });
+  
+  const salPayment = mongoose.model('salPayment', salpaymentSchema);
+  
+  // Routes
+  app.post('/salon/payments', async (req, res) => {
+    try {
+      const { userid, title, service, slot, addressValue, accountValue } = req.body;
+      console.log(req.body)
+      const payment = new salPayment({ userid, title, service, slot, addressValue, accountValue });
+      await payment.save();
+      res.status(201).json({ message: 'Payment details stored successfully.' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   });
 
   const Salon = mongoose.model('Salon', salonSchema);
@@ -235,30 +280,6 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.send('Products added successfully');
     });
 });
-
-
-// app.post('/api/addsalon', upload.single('image'),  (req, res) => {
-//   try {
-//     console.log('hi')
-//     console.log(req.body)
-//     console.log(req.file)
-   
-//     const newSalon = new Salon({
-//       title: req.body.title,
-//       description: req.body.description,
-//       location_category: req.body.location,
-//       phoneNumber: req.body.phoneNumber,
-//       address: req.body.address,
-//       image: req.file.filename, // Storing only the filename
-//     });
-    
-//      newSalon.save();
-//     res.status(200).json({ message: 'Salon added successfully' });
-//   } catch (err) {
-//     console.error('Error during adding salon:', err);
-//     res.status(500).json({ error: err.message });
-//   }
-// });
 
 
 
@@ -360,11 +381,13 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       title: String,
       quantity: Number,
       price: Number,
-      image:String
+      image: String
       // Add other product details if needed
     }],
     totalAmount: Number,
-  });
+    dateCreated: { type: Date, default: Date.now } // Adding dateCreated field
+});
+
   
   // Create the Order model
   const Order = mongoose.model('Order', orderSchema);

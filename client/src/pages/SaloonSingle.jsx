@@ -8,14 +8,13 @@ import { useParams } from 'react-router-dom';
 const SaloonSingle = () => {
   const [salon, setSalon] = useState(null);
   const { title,userid } = useParams();
-  console.log(title)
-console.log(userid)
+ 
 
   useEffect(() => {
     const fetchSalonDetails = async () => {
       try {
         console.log('hi')
-        const response = await fetch(`http://localhost:3001/salons/${title}`);
+        const response = await fetch(`http://localhost:3002/salons/${title}`);
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -35,7 +34,7 @@ console.log(userid)
   return (
     <>
       <Header/>
-      <Sheader />
+     
       {salon && (
         <SaloonDetails
           title={title}
