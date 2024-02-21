@@ -5,10 +5,10 @@ import Mum from '../assets/mum.png'
 import Del from '../assets/del.png'
 import Hyd from '../assets/hyd.png'
 import Che from '../assets/ben.png'
-import s1 from '../assets/s1.png'
-import s2 from '../assets/s2.png'
-import s3 from '../assets/s3.png'
-import s4 from '../assets/s4.png'
+import s1 from '../assets/img1.png'
+import s2 from '../assets/img2.png'
+import s3 from '../assets/img3.png'
+
 import img from '../assets/grooming.jpg'
 import { Link } from "react-router-dom";
 import { useParams } from 'react-router-dom';
@@ -64,7 +64,8 @@ Book a Professional Pet groomer That Will Come to your home.
 
  <div style={{display: 'flex',
     alignItems: 'center',
-    justifyContent:' center'}}>
+    justifyContent:' center',
+    flexWrap:'wrap'}}>
     <Link to={`/salons/${userid}/mumbai`}> <img src={Mum}/></Link>
     <Link to={`/salons/${userid}/hyderabad`}> <img src={Hyd}/></Link>
     <Link to={`/salons/${userid}/chennai`}> <img src={Che}/></Link>
@@ -76,33 +77,14 @@ Book a Professional Pet groomer That Will Come to your home.
  <div style={{    fontSize: '32px',fontWeight: '900',lineHeight: '1.4',textAlign: 'center',color: '#515252',margin: '35px'}}>Steps to Book a Service</div>
  <div style={{display: 'flex',
     alignItems: 'center',
-    justifyContent:' center'}}>
+    justifyContent:' center',
+    flexWrap:'wrap'}}>
     <img src={s1}/>
     <img src={s2}/>
     <img src={s3}/>
-    <img src={s4}/>
+   
  </div>
- <div style={{display: 'flex',
-    alignItems: 'center',
-    justifyContent:' center'}}>
-   <h5 style={{    width: '513px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'}}>Choose a Package</h5>
-   <h5 style={{    width: '513px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'}}>Select a nearest Salon and Schedule Date and Time</h5>
-   <h5 style={{    width: '513px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'}}>Easy Payment Options</h5>
-
-   <h5 style={{    width: '513px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'}}>Get Grooming Service</h5>
- </div>
+ 
         </>
     )
 }

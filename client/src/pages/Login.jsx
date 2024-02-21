@@ -93,7 +93,7 @@ const LoginSignup = () => {
   // Call the function
   const registerUser = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/user/register', {
+      const response = await fetch('http://localhost:3002/api/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ const LoginSignup = () => {
   const onloginHandler=async(event)=>{
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/user/login', {
+      const response = await fetch('http://localhost:3002/api/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
