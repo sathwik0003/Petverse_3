@@ -1,35 +1,38 @@
-
 import { useState } from 'react';
 import './Header.css';
 import logoo from '../assets/Petverse_logo.jpeg.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faUser, faShoppingCart, faHeart, faBars } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../pages/authSlice';
+
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
+  const { userid } = useParams();
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
+
   const closeModal = () => {
     const modal = document.getElementById("myModal");
     modal.style.display = "none";
   };
+
   const handleOutsideClick = (event) => {
     const modal = document.getElementById("myModal");
     if (event.target === modal) {
       modal.style.display = "none";
     }
   };
+
   const sendData = (e) => {
+    setLoading(true);
     // Assuming fetch is replaced by your actual fetch function
     fetch(`http://localhost:3001/search1/${e}`, {
       method: 'POST',
@@ -38,88 +41,59 @@ const Header = () => {
     })
       .then(res => res.json())
       .then(data => {
-        let payload = data.payload;
-        // Display the modal when results are available
+        setResults(data);
+        setLoading(false);
         const modal = document.getElementById("myModal");
         modal.style.display = "block";
-
-        // Assuming searchResults is a div element
-        const searchResults = document.getElementById('searchResults');
-        searchResults.innerHTML = '';
-
-        if (payload.length < 1) {
-          searchResults.innerHTML = '<p>Nothing found</p>';
-          return;
-        }
-
-        payload.forEach((item, index) => {
-          if (index > 0) searchResults.innerHTML += '<hr>';
-          searchResults.innerHTML += (
-            <form action="/search1" method="POST">
-              <input type="hidden" name="hellomoto" value={item.name} />
-              <button type="submit" id='btnn' className='custom-button'>
-                <p>{item.name}</p>
-              </button>
-            </form>
-          );
-        });
       })
       .catch(error => {
+        setLoading(false);
+        setError(error.message);
         console.error("Error:", error.message);
-        // Handle the error gracefully, e.g., display an error message
       });
   };
 
-
-
-
-  const { userid } = useParams();
-
+  const redirectToSearchResults = (query) => {
+    window.location.href = `/productspage?query=${query}`;
+  };
 
   return (
     <>
       <header className={`header ${isMenuOpen ? 'menu-open' : ''}`}>
         <div className="logo">
-        <Link to={`/user/main/${userid}`}>
-        <img src={logoo} alt="Logo" />
-        </Link>
+          <Link to={`/user/main/${userid}`}>
+            <img src={logoo} alt="Logo" />
+          </Link>
         </div>
         <div className="user-actions">
           <div className="user-action-group">
-
-          <button className="user-button">
+            <button className="user-button">
               <Link to={`/user/products/${userid}/CAT`} style={{ textDecoration: 'none', color: 'white' }}>
-                <span className="label" style={{ textDecoration: 'none', color: 'white',padding: '2rem' }}>Cat</span>
+                <span className="label" style={{ textDecoration: 'none', color: 'white', padding: '2rem' }}>Cat</span>
               </Link>
             </button>
           </div>
-
           <div className="user-action-group">
-
-          <button className="user-button">
+            <button className="user-button">
               <Link to={`/user/products/${userid}/DOG`} style={{ textDecoration: 'none', color: 'white' }}>
-                <span className="label" style={{ textDecoration: 'none', color: 'white',padding: '2rem' }}>Dog</span>
+                <span className="label" style={{ textDecoration: 'none', color: 'white', padding: '2rem' }}>Dog</span>
               </Link>
             </button>
           </div>
-
           <div className="user-action-group">
-
-          <button className="user-button">
-    <Link to={`/user/salon/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
-      <span className="label" style={{ textDecoration: 'none', color: 'white',padding: '2rem' }}>Salon</span>
-    </Link>
-         </button>
+            <button className="user-button">
+              <Link to={`/user/salon/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
+                <span className="label" style={{ textDecoration: 'none', color: 'white', padding: '2rem' }}>Salon</span>
+              </Link>
+            </button>
+          </div>
         </div>
-          
-        </div>
-
         <div className="search-bar">
-          <input type="text" placeholder="Sea. "  onChange={(e) => sendData(e.target.value)}/>
+          <input type="text" placeholder="Search... " onChange={(e) => sendData(e.target.value)} />
           <FontAwesomeIcon className="search-icon" icon={faSearch} />
         </div>
         <div id="myModal" className="modal" onClick={handleOutsideClick}>
-            <div className="modal-content">
+          <div className="modal-content">
             <span className="close" onClick={closeModal}>&times;</span>
             <section id="searchResults">
               {loading && <p>Loading...</p>}
@@ -128,12 +102,9 @@ const Header = () => {
                 <ul>
                   {results.map((item, index) => (
                     <li key={index}>
-                      <form action="/search1" method="POST">
-                        <input type="hidden" name="hellomoto" value={item.name} />
-                        <button type="submit" id="btnn" className='custom-button'>
-                          <p>{item.name}</p>
-                        </button>
-                      </form>
+                      <button type="button" id="btnn" className='custom-button' onClick={() => redirectToSearchResults(item.name)}>
+                        <p>{item.name}</p>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -141,37 +112,29 @@ const Header = () => {
                 <p>{!loading && !error && 'No results found'}</p>
               )}
             </section>
-
-             
-            </div>
           </div>
-
+        </div>
         <div className={`menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
           <FontAwesomeIcon icon={faBars} />
         </div>
         {isMenuOpen && <>
           <div className="user-action-group">
-
-          <button className="user-button">
+            <button className="user-button">
               <Link to='/user/products/CAT' style={{ textDecoration: 'none', color: 'white' }}>
                 <span className="label" style={{ textDecoration: 'none', color: 'white' }}>Cat</span>
               </Link>
             </button>
           </div>
-
           <div className="user-action-group">
-          <button className="user-button">
+            <button className="user-button">
               <Link to={`/user/products/${userid}/DOG`} style={{ textDecoration: 'none', color: 'white' }}>
-                <span className="label" style={{ textDecoration: 'none', color: 'white',padding: '2rem' }}>Dog</span>
+                <span className="label" style={{ textDecoration: 'none', color: 'white', padding: '2rem' }}>Dog</span>
               </Link>
             </button>
-
-           
           </div>
-
           <button className="user-button">
             <span className="label">
-            <Link to={`/user/salon/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
+              <Link to={`/user/salon/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
                 Salon
               </Link>
             </span>
@@ -183,13 +146,12 @@ const Header = () => {
                 Account
               </Link>
             </span>
-
           </button>
           <button className="user-button">
             <FontAwesomeIcon icon={faShoppingCart} />
             <span className="label" style={{ textDecoration: 'none', color: 'white' }}>
-            <Link to={`/user/cart/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
-                cart
+              <Link to={`/user/cart/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
+                Cart
               </Link>
             </span>
           </button>
@@ -197,9 +159,13 @@ const Header = () => {
             <FontAwesomeIcon icon={faHeart} />
             <span className="label" style={{ textDecoration: 'none', color: 'white' }}>Wishlist</span>
           </button>
-          <button className="user-button">Logout</button>
+          <button className="user-button" onClick={() => {
+            dispatch(logout);
+            window.location.href = '/';
+          }}>
+            Logout
+          </button>
         </>}
-        
         <div className="user-actions">
           <button className="user-button">
             <FontAwesomeIcon icon={faUser} />
@@ -208,12 +174,11 @@ const Header = () => {
                 Account
               </Link>
             </span>
-
           </button>
           <button className="user-button">
             <FontAwesomeIcon icon={faShoppingCart} />
             <span className="label">
-            <Link to={`/user/cart/${userid}`} className='custom-link' style={{ textDecoration: 'none', color: 'white' }}>
+              <Link to={`/user/cart/${userid}`} className='custom-link' style={{ textDecoration: 'none', color: 'white' }}>
                 Cart
               </Link>
             </span>
@@ -221,17 +186,15 @@ const Header = () => {
           <button className="user-button" >
             <FontAwesomeIcon icon={faHeart} />
             <Link to={`/user/wishlist/${userid}`} style={{ textDecoration: 'none', color: 'white' }}>
-            <span className="label" style={{ textDecoration: 'none', color: 'white' }}>Wishlist</span >
-              </Link>
-            
+              <span className="label" style={{ textDecoration: 'none', color: 'white' }}>Wishlist</span >
+            </Link>
           </button>
           <button className="user-button" onClick={() => {
-  dispatch(logout);
-  window.location.href = '/';
-}}>
-  Logout
-</button>
-
+            dispatch(logout);
+            window.location.href = '/';
+          }}>
+            Logout
+          </button>
         </div>
       </header>
     </>

@@ -16,12 +16,12 @@ const Productpage = () => {
 
   const { attribute } = useParams();
   console.log(attribute)
-  const { division } = useParams();
+  const  {division} = useParams();
   console.log(division)
 
 
 
-  const [brandFilter, setBrandFilter] = useState('All');
+  const [brandFilter, setBrandFilter] = useState('A');
   const [priceFilter, setPriceFilter] = useState('All');
   const [specieFilter, setSpecieFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -29,6 +29,9 @@ const Productpage = () => {
 
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+
+
+  
 
 
 
@@ -95,6 +98,7 @@ const Productpage = () => {
 
     if (attribute === "CAT") {
       setSpecieFilter("cat");
+      
     }
     if (attribute === "DOG") {
       setSpecieFilter("dog");

@@ -1074,24 +1074,21 @@ app.post('/users/names', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-app.post('/search1/:e', async (req, res) => {
-  try {
-    const {e}=req.params
-    console.log("Search query:", e);
-
-    // Assuming you have a 'Product' model defined
-    const products = await BrandProducts.find({ "title": { $regex: '.*' + e + '.*', $options: 'i' } });
-
-    if (products.length > 0) {
-      // Assuming you have a 'dog_products' template
-      res.json(products)
-      console.log(products)
-    } 
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).send("An error occurred. Please try again later.");
-  }
+// Assuming you have a route setup for handling search requests
+app.post('/search1', (req, res) => {
+  const query = req.body.payload;
+  // Your logic to search for products based on the query
+  // For example, searching in a database
+  BrandProducts.find({ title: { $regex: query, $options: 'i' } })
+    .then(products => {
+      res.json(products);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
+
 
 // admin users fetch
 app.get('/fetchusers',async(req,res)=>{
