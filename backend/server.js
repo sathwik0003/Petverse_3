@@ -711,6 +711,17 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     }
   });
 
+  app.get('/api/services', async (req, res) => {
+    try {
+      const services = await salPayment.find();
+      res.json(services);
+     
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
+  });
+
   app.get('/uploads/:filename', (req, res) => {
     console.log('hi')
     const { filename } = req.params;

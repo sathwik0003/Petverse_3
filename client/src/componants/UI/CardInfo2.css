@@ -1,4 +1,4 @@
-.ucard-container {
+.ascard-container {
     display: flex;
     flex-wrap: wrap;
     border: 1px solid #ddd;
@@ -7,50 +7,50 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 8px;  /* Add padding around the entire card container */
     margin: 2vw;
-    background-color: #726b6b52;
+    background-color: #bbd9e7;
     margin-left: 21vw;
   }
   
-  .uprofile-pic img {
+  .asprofile-pic img {
     width: 100%;
     max-width: 134px;  
     border-radius: 50%; 
     margin-right: 2vw; 
   }
   
-  .uuser-content {
+  .asuser-content {
     flex: 2;
     padding: 4px;
-    padding-left: 4vw;
+    padding-left: 10vw;
     border-left: 1px solid black;
     border-right: 1px solid black;
 
   }
   
-  .uuser-content h2 {
+  .asuser-content h2 {
     margin-bottom: 8px;
     color: #333;
     font-size: 2vw;
   }
   
-  .uuser-content p {
+  .asuser-content p {
     color: #666;
   }
-  .ubgrp{
+  .asbgrp{
     margin-left: 2vw;
   }
 
-   .ucm{
+   .ascm{
     margin-top: 2vw;
     background-color: rgb(193, 130, 35);
   }
-   .ucd{
+   .ascd{
     margin-top: 2vw;
     background-color: green;
   }
 
   @media only screen and (max-width: 600px) {
-    .ucard-container{
+    .ascard-container{
         flex-direction: column;
     }
   }
