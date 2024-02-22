@@ -64,9 +64,67 @@ const StatisticCard = ({ icon, title, initialValue, value, background }) => {
   );
 };
 
-const AdminDashBoard = () => {
+const AdminDashboard = () => {
+  const [totalusers, setTotalusers] = useState(null);
+  const [totalsellers, setTotalsellers] = useState(null);
+  const [totalcomplaints, setTotalcomplaints] = useState(null);
+  const [totalproducts, setTotalproducts] = useState(null);
+  const [totalsalons, setTotalsalons] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTotalUsers = async () => {
+      try {
+        const responseu = await fetch('http://localhost:3002/api/user/total');
+        if (!responseu.ok) {
+          throw new Error(`Error: ${responseu.statusText}`);
+        }
+        const responsese = await fetch('http://localhost:3002/api/sellerss/total');
+        if (!responsese.ok) {
+          throw new Error(`Error: ${responsese.statusText}`);
+        }
+        const responsep = await fetch('http://localhost:3002/api/productss/total');
+        if (!responsep.ok) {
+          throw new Error(`Error: ${responsep.statusText}`);
+        }
+        const responsec = await fetch('http://localhost:3002/api/complaintss/total');
+        if (!responsec.ok) {
+          throw new Error(`Error: ${responsec.statusText}`);
+        }
+        const responsesa = await fetch('http://localhost:3002/api/salonss/total');
+        if (!responsesa.ok) {
+          throw new Error(`Error: ${responsesa.statusText}`);
+        }
+        const datau = await responseu.json();
+        console.log(datau)
+        setTotalusers(datau.totalusers);
+        const datase = await responsese.json();
+        setTotalsellers(datase.totalsellers)
+        const datap = await responsep.json();
+        setTotalproducts(datap.totalproducts)
+        const datac = await responsec.json();
+        setTotalcomplaints(datac.totalcomplaints)
+        const datasa = await responsesa.json();
+        setTotalsalons(datasa.totalsalons)
+        setIsLoading(false); // Set loading to false after fetching data
+      } catch (error) {
+        console.error('Error fetching total users:', error);
+        setIsLoading(false); // Set loading to false in case of error
+      }
+    };
+  
+    fetchTotalUsers();
+  }, []);
+  
+  // If loading, return null until data is fetched
+  if (isLoading) {
+    return null;
+  }
+
+  
+
   const data = {
-    u1: 30,
+    u1: 1,
     u2: 100,
     messages: 10,
     products: 300,
@@ -86,7 +144,7 @@ const AdminDashBoard = () => {
             icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
             title="Users"
             initialValue={0}
-            value={data.u1}
+            value={totalusers||0}
             background="7386D5"
           />
         </Link>
@@ -95,25 +153,29 @@ const AdminDashBoard = () => {
             icon={<FontAwesomeIcon icon={faUsers} size="2x" />}
             title="Brands"
             initialValue={0}
-            value={data.u1}
+            value={totalsellers||0}
             background="7386D6"
           />
         </Link>
 
+        <Link to='/admin/products'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"
           initialValue={0}
-          value={data.u2}
+          value={totalproducts||0}
           background="373b44"
         />
+        </Link>
+        <Link to='admin/complaints'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCommentAlt} size="2x" />}
           title="Complaints"
           initialValue={0}
-          value={data.messages}
+          value={totalcomplaints||0}
           background="009688"
         />
+        </Link>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faRupeeSign} size="2x" />}
           title="Bag Value"
@@ -121,16 +183,18 @@ const AdminDashBoard = () => {
           value={data.bagValue}
           background="FF9800"
         />
+        <Link to='admin/salons'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCut} size="2x" />}
           title="Saloons"
           initialValue={0}
-          value={data.saloons}
+          value={totalsalons||0}
           background="E91E63"
         />
+        </Link>
       </div>
     </>
   );
 };
 
-export default AdminDashBoard;
+export default AdminDashboard;

@@ -65,7 +65,7 @@ const UserOrders = ({ userid }) => {
           throw new Error(`Error: ${response.statusText}`);
         }
 
-       
+
       }
       // You can handle success, e.g., show a toast or update UI
     } catch (error) {
@@ -83,36 +83,44 @@ const UserOrders = ({ userid }) => {
             <div key={userId} className="user-orders">
               {groupedOrders[userId].map(order => (
                 <Box key={order._id} style={{ borderWidth: '1px', padding: '0px', marginBottom: '20px', border: '1px solid #ddd', background: '#f9f9f9', borderRadius: '9px' }}>
-                  <Box style={{ display: 'flex' ,borderBottom: '1px solid #ddd'}}>
+                  <Box style={{ display: 'flex', borderBottom: '1px solid #ddd' }}>
                     <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-                      <p style={{margin: '1px',
-    fontSize: '21px'}}>Name</p>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Name</p>
                       <p style={{ display: 'flex' }}>
-                       <b> {userId}</b>
+                        <b> {userId}</b>
                       </p>
                     </Box>
                     <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-                      <p style={{margin: '1px',
-    fontSize: '21px'}}>Date</p>
-                     <b> <p>17-02-2023</p></b>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Date</p>
+                      <b> <p>17-02-2023</p></b>
                     </Box>
                     <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-                     
-                        <p style={{margin: '1px',
-    fontSize: '21px'}}>
-                          Total Amount
-                        </p>
-                        <p>
-                         <b> ₹{order.totalAmount}</b>
-                        </p>
-                  
-                      
-                   
+
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>
+                        Total Amount
+                      </p>
+                      <p>
+                        <b> ₹{order.totalAmount}</b>
+                      </p>
+
+
+
                     </Box>
                     <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-                      <p style={{margin: '1px',
-    fontSize: '21px'}}>Order Id</p>
-                     <b> <p>{order._id}</p></b>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Order Id</p>
+                      <b> <p>{order._id}</p></b>
                     </Box>
                   </Box>
                   <ul className="order-list">
@@ -120,41 +128,48 @@ const UserOrders = ({ userid }) => {
                       <div className="product-details">
                         {order.products.map(product => (
                           <>
-                          <div key={product.title} style={{display:'flex'}}>
-                            <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} boxSize="5vw" style={{margin:'1px 58px'}}/>
-                            <Box style={{display:'flex'}} >
-                            <Box style={{width:'27rem'}}>
-                              <p style={{
-    fontWeight: 'bold',
-    marginRight: '34px',
-    marginLeft: '22px'}}>{product.title}</p>
-                              <p style={{
-    fontWeight: 'bold',
-    marginRight: '34px',
-    marginLeft: '22px'}}>Quantity: {product.quantity}</p>
-                              <p style={{
-    fontWeight: 'bold',
-    marginRight: '34px',
-    marginLeft: '22px'}}>Price: ₹{product.price}</p>
-                            </Box>
-                            <Link to={`/product/${userid}/${product.title}`}>
-                            <button style={{    background: 'RGBA(0, 0, 0, 0.36)',
-                            color:'black',
-    width: '19rem',
-    height: '3.5rem',
-    margin: '1rem'}}>View Item</button>
-    </Link>
-    
-                            <button style={{    background: 'RGBA(0, 0, 0, 0.36)',
-                             color:'black',
-    width: '19rem',
-    height: '3.5rem',
-    margin: '1rem'}}  onClick={() => addToCart(product)}>Buy Again</button>
-                            </Box>
-                           
-                          </div>
-                          
-                         </>
+                            <div key={product.title} style={{ display: 'flex' }}>
+                              <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} boxSize="5vw" style={{ margin: '1px 58px' }} />
+                              <Box style={{ display: 'flex' }} >
+                                <Box style={{ width: '27rem' }}>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>{product.title}</p>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>Quantity: {product.quantity}</p>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>Price: ₹{product.price}</p>
+                                </Box>
+                                <Link to={`/product/${userid}/${product.title}`}>
+                                  <button style={{
+                                    background: 'RGBA(0, 0, 0, 0.36)',
+                                    color: 'black',
+                                    width: '19rem',
+                                    height: '3.5rem',
+                                    margin: '1rem'
+                                  }}>View Item</button>
+                                </Link>
+
+                                <button style={{
+                                  background: 'RGBA(0, 0, 0, 0.36)',
+                                  color: 'black',
+                                  width: '19rem',
+                                  height: '3.5rem',
+                                  margin: '1rem'
+                                }} onClick={() => addToCart(product)}>Buy Again</button>
+                              </Box>
+
+                            </div>
+
+                          </>
                         ))}
                       </div>
                     </li>

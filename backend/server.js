@@ -365,11 +365,12 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       name: String,
       address: String,
       accountNumber: String,
-      cvv: String,
+    
       expiryDate: Date,
     },
     products: [{
       title: String,
+      brandcode:String,
       quantity: Number,
       price: Number,
       image: String
@@ -708,6 +709,17 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     } catch (error) {
       console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.get('/api/services', async (req, res) => {
+    try {
+      const services = await salPayment.find();
+      res.json(services);
+     
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
   });
 
@@ -1085,6 +1097,36 @@ app.get('/orders', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+app.get('/api/order', async (req, res) => {
+  try {
+    const { bc } = req.query;
+    
+    
+      // Find orders that contain products with the given brand code
+      const orders = await Order.find({ 'products.brandcode': bc });
+
+      // Filter products with the given brand code for each order
+      const ordersWithFilteredProducts = orders.map(order => {
+          const productsWithBrandCode = order.products.filter(product => product.brandcode === bc);
+          return {
+              orderId: order._id,
+              userId: order.userId,
+              paymentDetails: order.paymentDetails,
+              products: productsWithBrandCode,
+              totalAmount: order.totalAmount,
+              dateCreated: order.dateCreated
+          };
+      });
+
+      res.json(ordersWithFilteredProducts);
+  } catch (error) {
+      console.error('Error retrieving orders:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving orders' });
+  }
+    
+  
+});
+
 
 app.post('/users/names', async (req, res) => {
   try {
@@ -1270,6 +1312,62 @@ app.get('/fetchusersinsights',async (req,res) => {
   }
 }
 )
+
+//count
+//users
+
+app.get('/api/user/total', async (req, res) => {
+  try {
+    const totalusers = await User.countDocuments();
+    res.json({totalusers})
+  } catch (error) {
+    console.error('Error fetching total users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+//sellers
+app.get('/api/sellerss/total', async (req, res) => {
+  try {
+      const totalsellers = await Brand.countDocuments();
+      res.json({ totalsellers });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//products
+app.get('/api/productss/total', async (req, res) => {
+  try {
+      const totalproducts = await BrandProducts.countDocuments();
+      res.json({ totalproducts });
+     
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//complaints
+app.get('/api/complaintss/total', async (req, res) => {
+  try {
+      const totalcomplaints = await Complaint.countDocuments();
+      res.json({ totalcomplaints });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//salons
+app.get('/api/salonss/total', async (req, res) => {
+  try {
+      const totalsalons = await Salon.countDocuments();
+      res.json({ totalsalons });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 

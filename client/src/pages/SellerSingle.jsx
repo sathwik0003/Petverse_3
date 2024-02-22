@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Text, Flex, Heading, Image, Card } from '@chakra-ui/react';
 import Navbar from './NavBar';
 import { useParams } from 'react-router-dom';
-import bulldog from '../assets/bulldog.jpg';
 import { FaShoppingCart, FaCheckCircle } from 'react-icons/fa'; // Importing icons for available and sold sections
 
 const SellerSingle = () => {
@@ -75,18 +74,21 @@ const SellerSingle = () => {
             )}
             <Box m="2rem">
                 <Heading fontSize="1.5vw">Orders:</Heading>
-                <Flex flexWrap="wrap">
-                    {orders.map((order, index) => (
-                        <Card key={order._id} m="1rem" width={['100%', '45%', '30%', '22%']} p="1rem" boxShadow="md" borderRadius="md"  bg="#A0AEC0">
-                            <Text fontSize="1vw">Order ID: {order._id}</Text>
-                            <Text fontSize="1vw">Date: {order.dateCreated}</Text>
-                            <Text fontSize="1vw">Username: {order.userId}</Text>
-                            <Text fontSize="1vw">Quantity: {order.products.find(prod => prod.title === title)?.quantity}</Text>
-                            <Text fontSize="1vw">Price: {order.products.find(prod => prod.title === title)?.price}</Text>
-                            
-                        </Card>
-                    ))}
-                </Flex>
+                {orders.length === 0 ? (
+                    <Text>No orders placed</Text>
+                ) : (
+                    <Flex flexWrap="wrap">
+                        {orders.map((order, index) => (
+                            <Card key={order._id} m="1rem" width={['100%', '45%', '30%', '22%']} p="1rem" boxShadow="md" borderRadius="md"  bg="#A0AEC0">
+                                <Text fontSize="1vw">Order ID: {order._id}</Text>
+                                <Text fontSize="1vw">Date: {order.dateCreated}</Text>
+                                <Text fontSize="1vw">Username: {order.userId}</Text>
+                                <Text fontSize="1vw">Quantity: {order.products.find(prod => prod.title === title)?.quantity}</Text>
+                                <Text fontSize="1vw">Price: {order.products.find(prod => prod.title === title)?.price}</Text>
+                            </Card>
+                        ))}
+                    </Flex>
+                )}
             </Box>
         </Box>
     );

@@ -102,11 +102,12 @@ const PaymentForm = () => {
         name: nameValue,
         address:addressValue,
         accountNumber: accountValue,
-        cvv: cvvValue,
+       
         expiryDate: dateValue,
       },
       products: cart.products.map((item) => ({
         title: item.title,
+        brandcode:item.brandcode,
         quantity: item.quantity,
         price: item.price,
         image:item.image

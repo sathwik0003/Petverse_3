@@ -8,7 +8,7 @@
     padding: 8px;  /* Add padding around the entire card container */
     margin: 2vw;
     background-color: #726b6b52;
-    margin-left: 20vw;
+    margin-left: 21vw;
   }
   
   .uprofile-pic img {
@@ -21,6 +21,7 @@
   .uuser-content {
     flex: 2;
     padding: 4px;
+    padding-left: 4vw;
     border-left: 1px solid black;
     border-right: 1px solid black;
 
