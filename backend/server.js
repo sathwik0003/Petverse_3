@@ -1274,6 +1274,62 @@ app.get('/fetchusersinsights',async (req,res) => {
 }
 )
 
+//count
+//users
+
+app.get('/api/user/total', async (req, res) => {
+  try {
+    const totalusers = await User.countDocuments();
+    res.json({totalusers})
+  } catch (error) {
+    console.error('Error fetching total users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+//sellers
+app.get('/api/sellerss/total', async (req, res) => {
+  try {
+      const totalsellers = await Brand.countDocuments();
+      res.json({ totalsellers });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//products
+app.get('/api/productss/total', async (req, res) => {
+  try {
+      const totalproducts = await BrandProducts.countDocuments();
+      res.json({ totalproducts });
+     
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//complaints
+app.get('/api/complaintss/total', async (req, res) => {
+  try {
+      const totalcomplaints = await Complaint.countDocuments();
+      res.json({ totalcomplaints });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+//salons
+app.get('/api/salonss/total', async (req, res) => {
+  try {
+      const totalsalons = await Salon.countDocuments();
+      res.json({ totalsalons });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 
