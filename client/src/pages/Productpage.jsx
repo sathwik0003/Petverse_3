@@ -5,19 +5,20 @@ import { Link, useParams } from 'react-router-dom';
 import './Productpag.css';
 import Header from '../componants/Header'
 import Heade2r from '../componants/Heade2r'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
-import Toast from './Toast';
 const Productpage = () => {
 
   const { userid } = useParams();
-  console.log(userid)
-  const [showToast, setShowToast] = useState(false);
+  
+ 
 
   const { attribute } = useParams();
-  console.log(attribute)
+  
   const { division } = useParams();
-  console.log(division)
+ 
 
 
 
@@ -34,7 +35,8 @@ const Productpage = () => {
 
   const addToWishlist = async (product) => {
     try {
-      if (!wishlist.some((item) => item.id === product.id)) {
+      
+      if (!wishlist.some((item) => item.title === product.title)) {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
 
         const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`, {
@@ -46,12 +48,16 @@ const Productpage = () => {
             product: { id, title, description, pet_category, product_category, available, price, image, brandcode },
           }),
         });
+        if(response.status===400){
+          
+            toast.info('Product already in Wishlist');
+          }
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
         setWishlist((prevWishlist) => [...prevWishlist, product]);
-        alert('Added to Wishlist')
+        toast.success('Added to Wishlist');
       }
       // You can handle success, e.g., show a toast or update UI
     } catch (error) {
@@ -63,8 +69,8 @@ const Productpage = () => {
 
       if (!cart.some((item) => item.title === product.title)) {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
-        setCart((prevCart) => [...prevCart, product]);
-        setShowToast(true);
+        
+       
         const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
           method: 'POST',
           headers: {
@@ -74,6 +80,9 @@ const Productpage = () => {
             product: { id, title, description, pet_category, product_category, available, price, image, brandcode },
           }),
         });
+        if(response.status===400){
+          toast.info('Product already in Cart');
+        }
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -81,7 +90,8 @@ const Productpage = () => {
 
        
       }
-      // You can handle success, e.g., show a toast or update UI
+      setCart((prevCart) => [...prevCart, product]);
+      toast.success('Added to Cart');
     } catch (error) {
       console.error('Error adding the cart:', error);
     }
@@ -132,9 +142,7 @@ const Productpage = () => {
 
   const fetchProducts = async () => {
     try {
-      console.log('hi')
-      console.log(specieFilter)
-      console.log(categoryFilter)
+     
 
       const response = await fetch(`http://localhost:3002/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
 
@@ -172,7 +180,7 @@ const Productpage = () => {
       {userid !== "undefined" ? (
         <Header />
       ) : <Heade2r />}
-      {showToast&& <Toast message="Added to Cart" onClose={() => setShowToast(false)} />}
+      
       <div className="productsfilters">
         <select className='productselect' placeholder="Filter by Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value)}>
           <option value="All">All Brands</option>
@@ -194,6 +202,7 @@ const Productpage = () => {
           <option value="900">Up to ₹900</option>
         </select>
       </div>
+      <ToastContainer />
       <div className="mainproduct1">
 
 

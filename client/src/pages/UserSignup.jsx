@@ -97,6 +97,7 @@ const UserSignup = () => {
           password: passwordValue,
         }),
       });
+      
   
       if (response.ok) {
         console.log('Registration successful');
@@ -104,8 +105,14 @@ const UserSignup = () => {
        
       } else {
         console.error('Registration failed');
+        if(response.status===400){
+          setAlertMessage('Username already exists. Please try again.');
+        }else{
+
+        
         setAlertMessage('Registration failed. Please try again.');
                 setShowAlert(true);
+              }
       }
     } catch (error) {
       console.error('Error during registration:', error);
