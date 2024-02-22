@@ -47,7 +47,7 @@ const AdminBrandProducts = () => {
             flexDirection="column"
             width="100%" // Adjust the width as needed
           >
-            <Image src={product.image} alt={product.name} height="200px" objectFit="cover" />
+            <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.name} height="200px" objectFit="cover" />
 
             <Box p="4" flex="1">
               <Text fontSize="xl" fontWeight="semibold" mb="2">

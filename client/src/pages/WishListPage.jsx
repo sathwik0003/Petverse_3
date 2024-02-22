@@ -65,7 +65,7 @@ const WishlistPage = () => {
 
 {wishlist.products.map((product) => (
     <div key={product.id} className="ppcard">
-        <Image src={product.image} alt={product.title} objectFit="cover" boxSize="20vw" />
+        <Image  src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} objectFit="cover" boxSize="20vw" />
         <div style={{ backgroundColor: "white" }}>
             <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
                 {product.brandName}

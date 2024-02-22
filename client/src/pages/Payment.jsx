@@ -227,7 +227,7 @@ const PaymentForm = () => {
           {cart.products.map((item) => (
             <div className="paymentone" key={item.id}>
               <div className="paymentok">
-                <Image src={item.image} alt={item.title} boxSize="8vw"/>
+                <Image  src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} boxSize="8vw"/>
               </div>
               <div className="paymentok">{item.title}</div>
               <div className="paymentok">{item.quantity}</div>

@@ -61,7 +61,7 @@ const AdminOrders = () => {
                   <div className="product-details">
                     {order.products.map(product => (
                       <div key={product.title} style={{display:'flex'}}>
-                      <img src={product.image} alt={product.title} style={{width:'12rem'}}></img>
+                      <img src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} style={{width:'12rem'}}></img>
                        <div>
                         <p>{product.title}</p>
                         <p>Quantity: {product.quantity}</p>

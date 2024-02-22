@@ -20,10 +20,10 @@ const morgan = require('morgan')
 const helmet = require('helmet')
 
 // Create a write stream (in append mode) for the log file
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 // Use morgan middleware with a custom stream for logging
-app.use(morgan('combined', { stream: accessLogStream }));
+//app.use(morgan('combined', { stream: accessLogStream }));
 
 
 
@@ -546,7 +546,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
         description :req.body.description,
         pet_category:req.body.pet_category,
         product_category:req.body.product_category,
-        total:req.body.quantity,
+       
         available:req.body.quantity,
         price:req.body.price,
         image: req.file.filename,
@@ -563,12 +563,12 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
 
 
-  app.delete('/api/products/:title', async (req, res) => {
-    const title = req.params.title;
+  app.delete('/api/products/:id', async (req, res) => {
+    const title = req.params.id;
   
     try {
       // Assuming BrandProducts is your Mongoose model
-      const deletedProduct = await BrandProducts.findOneAndDelete({title:title});
+      const deletedProduct = await BrandProducts.findOneAndDelete({_id:title});
   
       if (!deletedProduct) {
         return res.status(404).json({ message: 'Product not found' });
@@ -593,7 +593,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
           description: req.body.description,
           pet_category: req.body.pet_category,
           product_category: req.body.product_category,
-          total:req.body.quantity,
+          
           available: req.body.quantity,
           price: req.body.price,
           image: req.body.image,
@@ -1061,7 +1061,7 @@ app.post('/api/orders/:userId', async (req, res) => {
 
       if (existingProduct) {
         // Update available quantity
-        existingProduct.availableQuantity -= quantity;
+        existingProduct.available -= quantity;
         existingProduct.sold+=quantity;
         await existingProduct.save();
       }

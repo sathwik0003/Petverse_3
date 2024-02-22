@@ -24,16 +24,16 @@ const Seller_Products = () => {
         window.location.href = `/edit/${item.title}/${bc}`;
     };
 
-    const deleteProduct = async (title) => {
+    const deleteProduct = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/products/${title}`, {
+            const response = await fetch(`http://localhost:3002/api/products/${id}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
                 console.log('Product deleted successfully');
                 // Update the state after successful deletion
-                setFilteredItems(prevItems => prevItems.filter(item => item.title !== title));
+                setFilteredItems(prevItems => prevItems.filter(item => item._id !==id ));
             } else {
                 console.error('Failed to delete product');
             }
@@ -83,7 +83,7 @@ const Seller_Products = () => {
                                         marginRight="1vw"
                                         marginBottom="0.6vw"
                                         background='red'
-                                        onClick={() => deleteProduct(item.title)}
+                                        onClick={() => deleteProduct(item._id)}
                                     >
                                         <div style={{ padding: "0.2vw" }}>Delete</div>
                                     </Button>

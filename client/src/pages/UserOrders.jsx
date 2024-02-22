@@ -121,7 +121,7 @@ const UserOrders = ({ userid }) => {
                         {order.products.map(product => (
                           <>
                           <div key={product.title} style={{display:'flex'}}>
-                            <Image src={product.image} alt={product.title} boxSize="5vw" style={{margin:'1px 58px'}}/>
+                            <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} boxSize="5vw" style={{margin:'1px 58px'}}/>
                             <Box style={{display:'flex'}} >
                             <Box style={{width:'27rem'}}>
                               <p style={{

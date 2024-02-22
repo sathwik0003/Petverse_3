@@ -38,7 +38,7 @@ const SaloonSingle = () => {
       {salon && (
         <SaloonDetails
           title={title}
-          image={salon.image}
+          src={`http://localhost:3002/uploads/${salon.image}`}
           description={salon.description}
           address={salon.address}
           phone={salon.phoneNumber}
