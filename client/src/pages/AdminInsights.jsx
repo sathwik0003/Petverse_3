@@ -10,7 +10,7 @@ const AdminInsights = () => {
 
   const fetchBrandData = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/fetchbrandinsights`);
+      const response = await fetch(`http://localhost:3002/fetchbrandinsights`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -22,7 +22,7 @@ const AdminInsights = () => {
   };
   const fetchUsersData = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/fetchusersinsights`);
+      const response = await fetch(`http://localhost:3002/fetchusersinsights`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }

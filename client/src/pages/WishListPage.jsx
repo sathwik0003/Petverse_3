@@ -15,7 +15,7 @@ const WishlistPage = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/wishlist/${userid}`);
+        const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -32,7 +32,7 @@ const WishlistPage = () => {
 
   const removeFromWishlist = async (title) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/wishlist/${userid}/${title}`, {
+      const response = await fetch(`http://localhost:3002/api/wishlist/${userid}/${title}`, {
         method: 'DELETE',
       });
 

@@ -11,7 +11,7 @@ const AdminSalon = () => {
 
   const fetchSalons = async () => {
     try {
-      const response = await fetch('http://localhost:3001/salon');
+      const response = await fetch('http://localhost:3002/salon');
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -31,7 +31,7 @@ const AdminSalon = () => {
             <div key={item._id} className="saloon-container1">
               <div className="image-container">
                 <img
-                  src={`http://localhost:3001/uploads/${item.image}`}
+                  src={`http://localhost:3002/uploads/${item.image}`}
                   alt="Salon Image"
                   className="img-fluid"
                   style={{ height: '13rem' }}

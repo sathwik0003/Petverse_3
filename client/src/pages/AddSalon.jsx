@@ -57,7 +57,7 @@ const AddSalon = () => {
       formData.append('image', file);
       console.log(file)
 
-      const response = await fetch('http://localhost:3001/uploadsalon', {
+      const response = await fetch('http://localhost:3002/uploadsalon', {
         method: 'POST',
         body: formData,
         encType:'multipart/form'

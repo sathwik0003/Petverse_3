@@ -34,7 +34,7 @@ const Pro = ({userid,attribute,division}) => {
             if (!wishlist.some((item) => item.id === product.id)) {
           const { id, title, description, pet_category, product_category,available, price, image, brandcode } = product;
       
-          const response = await fetch(`http://localhost:3001/api/wishlist/${userid}`, {
+          const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const Pro = ({userid,attribute,division}) => {
             if (!cart.some((item) => item.title === product.title)) {
           const { id, title, description, pet_category, product_category,available, price, image, brandcode } = product;
           setCart((prevCart) => [...prevCart, product]);
-          const response = await fetch(`http://localhost:3001/api/cart/${userid}`, {
+          const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ const Pro = ({userid,attribute,division}) => {
           console.log(specieFilter)
           console.log(categoryFilter)
          
-          const response = await fetch(`http://localhost:3001/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
+          const response = await fetch(`http://localhost:3002/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
           
           // Check if the response is not successful (status code other than 200)
           if (!response.ok) {

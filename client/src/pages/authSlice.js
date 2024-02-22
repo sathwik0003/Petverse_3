@@ -10,7 +10,7 @@ const initialState = {
 
 export const signUpUser = createAsyncThunk('signupuser', async ({ firstNameValue, usernameValue, phoneValue, emailValue, passwordValue }) => {
   try {
-    const res = await fetch("http://localhost:3001/api/register", {
+    const res = await fetch("http://localhost:3002/api/register", {
       method: "POST",
       headers: {
         'Content-Type': "application/json"
@@ -40,7 +40,7 @@ export const signUpUser = createAsyncThunk('signupuser', async ({ firstNameValue
 export const signInUser = createAsyncThunk('signinuser', async ({  usernameValue, passwordValue }) => {
   
   try {
-    const response = await fetch('http://localhost:3001/api/login', {
+    const response = await fetch('http://localhost:3002/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const signInUser = createAsyncThunk('signinuser', async ({  usernameValue
 });
 export const Usersignup = createAsyncThunk('usersignup', async ({ firstNameValue, usernameValue, phoneValue, emailValue, passwordValue }) => {
   try {
-    const response = await fetch('http://localhost:3001/api/user/register', {
+    const response = await fetch('http://localhost:3002/api/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ export const Usersignup = createAsyncThunk('usersignup', async ({ firstNameValue
 export const Userlogin = createAsyncThunk('userlogin', async ({  loginuserValue, loginpasswordValue }) => {
   
   try {
-    const response = await fetch('http://localhost:3001/api/user/login', {
+    const response = await fetch('http://localhost:3002/api/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
