@@ -18,7 +18,7 @@ import Navbar from './pages/NavBar';
 import Seller_Products from './pages/Seller_Products';
 import DataComponent from './pages/data';
 import BrandDashBoard from './pages/Seller_Account';
-import LoginSignup from './pages/Login';
+
 import SaloonList from './pages/salonList';
 import AdminSalon from './pages/AdminSalon';
 import MainUser from './pages/MainUser';
@@ -59,8 +59,8 @@ import TableofBrands from './pages/TableofBrands';
 import AdminBrandProducts from './pages/AdminBrandProducts';
 import CsvApp from './pages/csv';
 import SellerSingle from './pages/SellerSingle';
-
-
+import UserSignup from './pages/UserSignup';
+import UserLogin from './pages/UserLogin';
 const App = () => {
  
 
@@ -68,6 +68,8 @@ const App = () => {
     <>
     <Routes>
     <Route path="/user/main" element={<MainUser />} />
+    <Route path="/user/signup" element={<UserSignup />} />
+    <Route path="/user/login" element={<UserLogin />} />
     <Route path="/csv" element={<CsvApp/>} />
       <Route path="/user/main/:userid" element={<MainUser />} />
       <Route path="/sell/:bc/:title" element={<SellerSingle />} />
@@ -113,8 +115,6 @@ const App = () => {
       <Route path="/success/:userid" element={<SuccessPage
       />} />
     
-      <Route path="/user/login" element={<LoginSignup
-      />}/>
       <Route path="/final/:userid" element={<SuccessPage
       />}/>
       <Route path="/add/:bc" element={<Addproduct/>} />

@@ -117,7 +117,7 @@ const TableofUsers = () => {
                                     <Td fontSize="1vw">{index + 1}</Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaUser} mr="2" />
-                                        {user.fullname}
+                                        {user.username}
                                     </Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaEnvelope} mr="2" />
