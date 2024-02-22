@@ -15,7 +15,7 @@ const AdminBrandProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/fetchproducts/${brandname}`);
+      const response = await fetch(`http://localhost:3002/fetchproducts/${brandname}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }

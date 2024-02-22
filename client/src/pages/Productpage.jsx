@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import './Productpag.css';
 import Header from '../componants/Header'
 import Heade2r from '../componants/Heade2r'
-import Footer from '../componants/mainpage/Footer';
+
 
 import Toast from './Toast';
 const Productpage = () => {
@@ -16,12 +16,12 @@ const Productpage = () => {
 
   const { attribute } = useParams();
   console.log(attribute)
-  const  {division} = useParams();
+  const { division } = useParams();
   console.log(division)
 
 
 
-  const [brandFilter, setBrandFilter] = useState('A');
+  const [brandFilter, setBrandFilter] = useState('All');
   const [priceFilter, setPriceFilter] = useState('All');
   const [specieFilter, setSpecieFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -31,16 +31,13 @@ const Productpage = () => {
   const [cart, setCart] = useState([]);
 
 
-  
-
-
 
   const addToWishlist = async (product) => {
     try {
       if (!wishlist.some((item) => item.id === product.id)) {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
 
-        const response = await fetch(`http://localhost:3001/api/wishlist/${userid}`, {
+        const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -68,7 +65,7 @@ const Productpage = () => {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
         setCart((prevCart) => [...prevCart, product]);
         setShowToast(true);
-        const response = await fetch(`http://localhost:3001/api/cart/${userid}`, {
+        const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -98,7 +95,6 @@ const Productpage = () => {
 
     if (attribute === "CAT") {
       setSpecieFilter("cat");
-      
     }
     if (attribute === "DOG") {
       setSpecieFilter("dog");
@@ -140,7 +136,7 @@ const Productpage = () => {
       console.log(specieFilter)
       console.log(categoryFilter)
 
-      const response = await fetch(`http://localhost:3001/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
+      const response = await fetch(`http://localhost:3002/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
 
       // Check if the response is not successful (status code other than 200)
       if (!response.ok) {
@@ -206,7 +202,7 @@ const Productpage = () => {
 
             <Link to={`/product/${userid}/${item.title}`}>
               <Image
-                src={item.image}
+                 src={`http://localhost:3002/uploads/${item.image}`}
                 alt={item.title}
                 objectFit="cover"
                 boxSize="20vw"

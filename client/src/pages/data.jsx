@@ -10,7 +10,7 @@ const DataComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/complaints');
+        const response = await axios.get('http://localhost:3002/api/complaints');
 
         setData(response.data);
         setLoading(false);

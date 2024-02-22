@@ -15,7 +15,7 @@ const ProductsCard = ({ image, title, description, price }) => {
     console.log(userid)
     const addReview = async (userName, productTitle) => {
         try {
-          const response = await fetch('http://localhost:3001/api/add-review', {
+          const response = await fetch('http://localhost:3002/api/add-review', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

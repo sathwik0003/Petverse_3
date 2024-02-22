@@ -14,7 +14,7 @@ const Seller_Products = () => {
     }, [bc]);
 
     const fetchProducts = () => {
-        fetch(`http://localhost:3001/api/products/${bc}`)
+        fetch(`http://localhost:3002/api/products/${bc}`)
             .then(response => response.json())
             .then(data => setFilteredItems(data))
             .catch(error => console.error(`Error fetching products for ${bc}:`, error));

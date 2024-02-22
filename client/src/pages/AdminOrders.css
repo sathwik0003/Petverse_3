@@ -2,19 +2,15 @@
 
 
   
-  .admin-orders {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
   
   .user-orders {
-    border: 1px solid #ddd;
+  
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 2px 102px;
-    background-color: #f9f9f9;
+   
     transition: transform 0.3s ease-in-out;
-    margin-left: 17vw;
+   
     margin-top: 3vw;
   }
   

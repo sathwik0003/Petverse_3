@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import useInput from './use-input';
 import Navbar from './NavBar';
 import {
-  ChakraProvider,
   Container,
   FormControl,
   FormLabel,

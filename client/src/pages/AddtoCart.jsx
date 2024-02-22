@@ -17,7 +17,7 @@ const AddtoCart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/cart/${userid}`);
+        const response = await fetch(`http://localhost:3002/api/cart/${userid}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -37,7 +37,7 @@ const AddtoCart = () => {
       // Check if the new quantity is greater than 0
       if (newQuantity > 0) {
         // You should implement a server endpoint to update the quantity in the database
-        const response = await fetch(`http://localhost:3001/api/cart/${userid}/${producttitle}`, {
+        const response = await fetch(`http://localhost:3002/api/cart/${userid}/${producttitle}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const AddtoCart = () => {
  
   const removeFromCart = async (title) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/cart/${userid}/${title}`, {
+      const response = await fetch(`http://localhost:3002/api/cart/${userid}/${title}`, {
         method: 'DELETE',
       });
 

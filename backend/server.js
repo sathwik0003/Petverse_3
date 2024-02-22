@@ -28,7 +28,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 
 app.use(cors());
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(express.json());
 dotenv.config({
     path:'./config.env'
@@ -205,14 +205,8 @@ const brandSchema = new mongoose.Schema({
     filename: function (req, file, cb) {
         const title = req.body.title || 'untitled';
         const address = req.body.address || 'noaddress'; 
-        
-        // Extracting the file extension
         const ext = file.originalname.split('.').pop();
-        
-        // Constructing the filename using the title, address, and extension
         const filename = `${title}_${address}.${ext}`;
-        
-        // Calling the callback with the constructed filename
         cb(null, filename);
     }
 });
@@ -223,14 +217,11 @@ const storage= multer.diskStorage({
   filename: function (req, file, cb) {
       const title = req.body.title || 'untitled';
       const address = req.body.address || 'noaddress'; 
-      
-      // Extracting the file extension
+ 
       const ext = file.originalname.split('.').pop();
-      
-      // Constructing the filename using the title, address, and extension
+ 
       const filename = `${title}_${address}.${ext}`;
-      
-      // Calling the callback with the constructed filename
+ 
       cb(null, filename);
   }
 });
@@ -721,9 +712,13 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
 
   app.get('/uploads/:filename', (req, res) => {
+    console.log('hi')
     const { filename } = req.params;
+    console.log(filename)
+
     // Set the path to the uploads directory where your images are stored
     const imagePath = path.join(__dirname, 'uploads', filename);
+    console.log(imagePath)
     res.sendFile(imagePath);
   });
 
