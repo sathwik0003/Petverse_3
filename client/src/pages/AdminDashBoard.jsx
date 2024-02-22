@@ -158,7 +158,7 @@ const AdminDashboard = () => {
           />
         </Link>
 
-        <Link to='admin/products'>
+        <Link to='/admin/products'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"
@@ -167,7 +167,7 @@ const AdminDashboard = () => {
           background="373b44"
         />
         </Link>
-        <Link to='admin/complaints'>
+        <Link to='/admin/complaints'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCommentAlt} size="2x" />}
           title="Complaints"
@@ -183,7 +183,7 @@ const AdminDashboard = () => {
           value={data.bagValue}
           background="FF9800"
         />
-        <Link to='admin/salons'>
+        <Link to='/admin/salons'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCut} size="2x" />}
           title="Saloons"

@@ -116,7 +116,7 @@ const AddtoCart = () => {
       <div className="mainproduct1">
         {cart.products.map((item) => (
           <div key={item.id} className="ppcard">
-            <Image src={item.image} alt={item.title} objectFit="cover" boxSize="20vw" />
+            <Image  src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} objectFit="cover" boxSize="20vw" />
             <div style={{ backgroundColor: "white" }}>
               <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
                 {item.brandName}
@@ -171,7 +171,7 @@ const AddtoCart = () => {
         marginTop="2"
         width="10vw"
        >
-       <Link to={`/user/payment/${userid}`}>
+       <Link to={`/user/payment/${userid}`} style={{textDecoration:'none',color:'white'}}>
         Buy Now
         </Link>
       </Button>
@@ -180,7 +180,7 @@ const AddtoCart = () => {
 
     
     </div>
-    <Footer />
+   
     </>
   );
 };

@@ -196,7 +196,7 @@ const Below999 = () => {
                    
                     <Link to={`/product/${userid}/${item.title}`}>
               <Image
-                src={item.image}
+                src={`http://localhost:3002/uploads/${item.image}`}
                 alt={item.title}
                 objectFit="cover"
                 boxSize="20vw"

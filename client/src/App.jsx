@@ -18,7 +18,7 @@ import Navbar from './pages/NavBar';
 import Seller_Products from './pages/Seller_Products';
 import DataComponent from './pages/data';
 import BrandDashBoard from './pages/Seller_Account';
-
+import Admin_UserOrders from './pages/Admin_UserOrders';
 import SaloonList from './pages/salonList';
 import AdminSalon from './pages/AdminSalon';
 import MainUser from './pages/MainUser';
@@ -79,6 +79,7 @@ const App = () => {
       <Route path="/user/cart/:userid" element={<AddtoCart />} />
       <Route path="/user/parenting/:id/:userid" element={<Petparentmain />} />
       <Route path="/brands/:brandname/products" element={<AdminBrandProducts />} />
+      <Route path="/admin/users/orders/:userid" element={<Admin_UserOrders />} />
     
       <Route path="/user/products/:userid?/:attribute/:division?" element={<Productpage />} />
       <Route path="/user/products/:userid?/699" element={<Below699 />} />

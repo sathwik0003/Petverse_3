@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import './UserOrders.css';
+import './AdminOrders.css';
 import { useParams } from 'react-router-dom';
-import Header from '../componants/Header';
+import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 import { Image, Box } from '@chakra-ui/react';
 import { FaUser } from 'react-icons/fa'; // Importing the FaUser icon
 import { Link } from 'react-router-dom';
-const UserOrders = ({ userid }) => {
+const Admin_UserOrders = () => {
+    const {userid}=useParams()
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,43 +45,15 @@ const UserOrders = ({ userid }) => {
 
   const groupedOrders = groupOrdersByUserId();
 
-  const addToCart = async (product) => {
-    try {
-
-      if (!cart.some((item) => item.title === product.title)) {
-        const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
-        setCart((prevCart) => [...prevCart, product]);
-        setShowToast(true);
-        const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            product: { id, title, description, pet_category, product_category, available, price, image, brandcode },
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-
-
-      }
-      // You can handle success, e.g., show a toast or update UI
-    } catch (error) {
-      console.error('Error adding the cart:', error);
-    }
-  };
-
   return (
     <>
+    <SidebarAdmin/>
       <div className="admin-orders">
         {loading ? (
           <p>Loading...</p>
         ) : (
           Object.keys(groupedOrders).map(userId => (
-            <div key={userId} className="user-orders">
+            <div key={userId} className="user-orders" >
               {groupedOrders[userId].map(order => (
                 <Box key={order._id} style={{ borderWidth: '1px', padding: '0px', marginBottom: '20px', border: '1px solid #ddd', background: '#f9f9f9', borderRadius: '9px' }}>
                   <Box style={{ display: 'flex',flexWrap:'wrap', borderBottom: '1px solid #ddd' }}>
@@ -100,21 +73,7 @@ const UserOrders = ({ userid }) => {
                       }}>Date</p>
                       <b> <p>17-02-2023</p></b>
                     </Box>
-                    <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-
-                      <p style={{
-                        margin: '1px',
-                        fontSize: '21px'
-                      }}>
-                        Total Amount
-                      </p>
-                      <p>
-                        <b> ₹{order.totalAmount}</b>
-                      </p>
-
-
-
-                    </Box>
+                    
                     <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
                       <p style={{
                         margin: '1px',
@@ -148,23 +107,23 @@ const UserOrders = ({ userid }) => {
                                     marginLeft: '22px'
                                   }}>Price: ₹{product.price}</p>
                                 </Box>
-                                <Link to={`/product/${userid}/${product.title}`}>
-                                  <button style={{
-                                    background: 'RGBA(0, 0, 0, 0.36)',
-                                    color: 'black',
-                                    width: '19rem',
-                                    height: '3.5rem',
-                                    margin: '1rem'
-                                  }}>View Item</button>
-                                </Link>
+                                <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
 
-                                <button style={{
-                                  background: 'RGBA(0, 0, 0, 0.36)',
-                                  color: 'black',
-                                  width: '19rem',
-                                  height: '3.5rem',
-                                  margin: '1rem'
-                                }} onClick={() => addToCart(product)}>Buy Again</button>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>
+                        Total Amount
+                      </p>
+                      <p>
+                        <b> ₹{order.totalAmount}</b>
+                      </p>
+
+
+
+                    </Box>
+                                
+
                               </Box>
 
                             </div>
@@ -184,4 +143,4 @@ const UserOrders = ({ userid }) => {
   );
 };
 
-export default UserOrders;
+export default Admin_UserOrders;

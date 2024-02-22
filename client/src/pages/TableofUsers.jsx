@@ -28,6 +28,7 @@ import {
 import { FaExclamationCircle, FaTrash, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaTruck } from 'react-icons/fa';
 import { RiCheckboxCircleFill } from 'react-icons/ri';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
+import { Link } from 'react-router-dom';
 
 const TableofUsers = () => {
     const [users, setUsers] = useState([]);
@@ -128,9 +129,11 @@ const TableofUsers = () => {
                                         {user.phoneNumber}
                                     </Td>
                                     <Td fontSize="1vw">
+                                    <Link to={`/admin/users/orders/${user.username}`}>
                                         <Button colorScheme="blue" size="sm" leftIcon={<FaTruck />}>
                                             Orders
                                         </Button>
+                                        </Link>
                                     </Td>
                                     <Td fontSize="1vw">
                                         <Icon as={FaExclamationCircle} color="red.500" mr="2" />

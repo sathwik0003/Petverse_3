@@ -1,7 +1,8 @@
-import  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa'; // Importing edit and delete icons
 import './Seller_Products.css';
 import Navbar from './NavBar';
 
@@ -24,16 +25,16 @@ const Seller_Products = () => {
         window.location.href = `/edit/${item.title}/${bc}`;
     };
 
-    const deleteProduct = async (title) => {
+    const deleteProduct = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/products/${title}`, {
+            const response = await fetch(`http://localhost:3002/api/products/${id}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
                 console.log('Product deleted successfully');
                 // Update the state after successful deletion
-                setFilteredItems(prevItems => prevItems.filter(item => item.title !== title));
+                setFilteredItems(prevItems => prevItems.filter(item => item._id !==id ));
             } else {
                 console.error('Failed to delete product');
             }
@@ -49,8 +50,8 @@ const Seller_Products = () => {
                 <div className="mainproduct1">
                     {filteredItems.map((item) => (
                         <div key={item.id} className="ppcard">
-                        <Link to={`/sell/${bc}/${item.title}`}>
-                            <Image src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} objectFit="cover" boxSize="20vw" />
+                            <Link to={`/sell/${bc}/${item.title}`}>
+                                <Image src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} objectFit="cover" boxSize="20vw" />
                             </Link>
                             <div style={{ backgroundColor: "white" }}>
                                 <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
@@ -71,7 +72,7 @@ const Seller_Products = () => {
                                         marginBottom="0.6vw"
                                         onClick={() => editProduct(item)}
                                     >
-                                        <div style={{ padding: "0.2vw" }}>Edit</div>
+                                        <FaEdit style={{ marginRight: "0.5vw" }} /> Edit
                                     </Button>
                                     <Button
                                         colorScheme="red"
@@ -83,9 +84,9 @@ const Seller_Products = () => {
                                         marginRight="1vw"
                                         marginBottom="0.6vw"
                                         background='red'
-                                        onClick={() => deleteProduct(item.title)}
+                                        onClick={() => deleteProduct(item._id)}
                                     >
-                                        <div style={{ padding: "0.2vw" }}>Delete</div>
+                                        <FaTrash style={{ marginRight: "0.5vw" }} /> Delete
                                     </Button>
                                 </div>
                             </div>
