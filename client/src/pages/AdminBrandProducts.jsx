@@ -1,11 +1,11 @@
 // ProductsPage.js
 import React, { useState, useEffect } from 'react';
-import { Grid, Box, Image, Text, Button } from '@chakra-ui/react';
-import { FaBoxOpen, FaTrash } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
+import { Image} from '@chakra-ui/react';
 
+import { useParams } from 'react-router-dom';
+import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 const AdminBrandProducts = () => {
-  const [products, setProducts] = useState([]);
+  const [items, setProducts] = useState([]);
   const { brandname } = useParams();
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -26,66 +26,58 @@ const AdminBrandProducts = () => {
     }
   };
 
-  const handleDeleteProduct = (productId) => {
-    // Implement your logic to delete the product with the given productId
-    console.log(`Delete product with ID: ${productId}`);
-  };
+  
 
   return (
-    <Box p="4">
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-        {products.map((product) => (
-          <Box
-            key={product._id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            boxShadow="md"
-            transition="transform 0.3s"
-            _hover={{ transform: 'scale(1.05)' }}
-            display="flex"
-            flexDirection="column"
-            width="100%" // Adjust the width as needed
-          >
-            <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.name} height="200px" objectFit="cover" />
+    <>
+    <SidebarAdmin/>
 
-            <Box p="4" flex="1">
-              <Text fontSize="xl" fontWeight="semibold" mb="2">
-                {product.name}
-              </Text>
-              <Text fontSize="sm" color="gray.500" mb="2">
-                {product.description}
-              </Text>
-              <Text fontSize="md" mb="2">
-                <strong>Availability:</strong> {product.total}
-              </Text>
-              <Text fontSize="md" mb="2">
-                <strong>Quantity:</strong> {product.available}
-              </Text>
-              <Text fontSize="md" mb="2">
-                <strong>Sold:</strong> {product.total-product.available}
-              </Text>
-              <Text fontSize="lg" mb="2">
-                <strong>Price:</strong> ${product.price}
-              </Text>
-              <Text fontSize="md">
-                <strong>Category:</strong> {product.product_category}
-              </Text>
+   <div style={{marginLeft: '25rem'}} >
+    
 
-              {/* Delete Button */}
-              <Button
-                mt="4"
-                colorScheme="red"
-                leftIcon={<FaTrash />}
-                onClick={() => handleDeleteProduct(product._id)}
-              >
-                Delete
-              </Button>
-            </Box>
-          </Box>
-        ))}
-      </Grid>
-    </Box>
+       <div className="mainproduct1">
+
+
+           {items.map((item) => (
+               <div key={item.id} className="ppcard">
+              
+              
+         <Image
+           src={`http://localhost:3002/uploads/${item.image}`}
+           alt={item.title}
+           objectFit="cover"
+           boxSize="20vw"
+         />
+     
+                
+                   <div style={{ backgroundColor: "white" }}>
+                       <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
+                           {item.brandName}
+                       </div>
+                       <div style={{ marginLeft: "2vw" }}>{item.title}</div>
+                       <div style={{display:'flex'}}>
+                       <div style={{ marginLeft: "2vw" }}>
+                           <b>Price:₹{item.price}</b>
+                       </div>
+                       <div style={{ marginLeft: "2vw" }}>
+                           <b>Available:{item.available}</b>
+                       </div>
+                       <div style={{ marginLeft: "2vw" }}>
+                           <b>Sold:{item.sold}</b>
+                       </div>
+                       </div>
+                       <div style={{ marginLeft: "2vw" }}></div>
+                      
+                         
+                       </div>
+                      
+                   </div>
+                  
+             
+           ))}
+       </div>
+   </div>
+   </>
   );
 };
 

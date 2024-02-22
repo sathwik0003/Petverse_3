@@ -171,7 +171,7 @@ const AddtoCart = () => {
         marginTop="2"
         width="10vw"
        >
-       <Link to={`/user/payment/${userid}`}>
+       <Link to={`/user/payment/${userid}`} style={{textDecoration:'none',color:'white'}}>
         Buy Now
         </Link>
       </Button>
@@ -180,7 +180,7 @@ const AddtoCart = () => {
 
     
     </div>
-    <Footer />
+   
     </>
   );
 };

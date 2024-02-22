@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react';
 import { Image, Button } from '@chakra-ui/react';
 import { FaShoppingCart, FaRegTrashAlt } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
-import Header from '../componants/Header'
-import './WishListPage.css'
-
+import Header from '../componants/Header';
+import './WishListPage.css';
 
 const WishlistPage = () => {
-    
   const { userid } = useParams();
   const [wishlist, setWishlist] = useState({ userId: '', products: [] });
   const [cart, setCart] = useState([]);
@@ -50,49 +48,54 @@ const WishlistPage = () => {
     }
   };
 
- 
-
   return (
     <div>
-    <Header/>
-      <h1 style={{    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '76px',
-    padding: '1rem'}}>Wishlist</h1>
-    <div className="mainproduct1">
-
-
-{wishlist.products.map((product) => (
-    <div key={product.id} className="ppcard">
-        <Image  src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} objectFit="cover" boxSize="20vw" />
-        <div style={{ backgroundColor: "white" }}>
-            <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
-                {product.brandName}
+      <Header />
+      <h1 style={{display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: '76px',
+  padding: '1rem'}}>Wishlist</h1>
+      <div className="mainproduct1">
+        {wishlist.products.length === 0 ? (
+          <div style={{display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: '24px',
+  marginTop: '20px',
+  color: '#999'}}>
+            Your wishlist is empty.
+          </div>
+        ) : (
+          wishlist.products.map((product) => (
+            <div key={product.id} className="ppcard">
+              <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} objectFit="cover" boxSize="20vw" />
+              <div style={{ backgroundColor: 'white' }}>
+                <div style={{ color: '#212529b5', fontSize: '1vw', marginLeft: '2vw' }}>
+                  {product.brandName}
+                </div>
+                <div style={{ marginLeft: '2vw' }}>{product.title}</div>
+                <div style={{ marginLeft: '2vw' }}>
+                  <b>₹{product.price}</b>
+                </div>
+                <div style={{ marginLeft: '2vw' }}></div>
+                <div className="buttonproducts">
+                  <Button
+                    className="wishbutton"
+                    leftIcon={<FaRegTrashAlt />}
+                    colorScheme="red"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeFromWishlist(product.title)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div style={{ marginLeft: "2vw" }}>{product.title}</div>
-            <div style={{ marginLeft: "2vw" }}>
-                <b>₹{product.price}</b>
-            </div>
-            <div style={{ marginLeft: "2vw" }}></div>
-            <div className="buttonproducts">
-            <Button
-            className='wishbutton'
-            leftIcon={<FaRegTrashAlt />}
-            colorScheme="red"
-            variant="outline"
-            size="sm"
-            onClick={() => removeFromWishlist(product.title)}
-          >
-            Remove
-          </Button>
-          
-            </div>
-        </div>
-    </div>
-))}
-</div>
-    
+          ))
+        )}
+      </div>
     </div>
   );
 };

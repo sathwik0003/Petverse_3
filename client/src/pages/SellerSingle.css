@@ -1,0 +1,10 @@
+.singleimage:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.availability-box:hover,
+.sold-box:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}

@@ -3,6 +3,7 @@ import { Box, Text, Flex, Heading, Image, Card } from '@chakra-ui/react';
 import Navbar from './NavBar';
 import { useParams } from 'react-router-dom';
 import { FaShoppingCart, FaCheckCircle } from 'react-icons/fa'; // Importing icons for available and sold sections
+import './SellerSingle.css'
 
 const SellerSingle = () => {
     const { title } = useParams();
@@ -50,7 +51,7 @@ const SellerSingle = () => {
             {product && (
                 <Card m="2rem" display="flex" flexDirection="row" flexWrap="wrap" border="0" maxWidth="100rem" height="40rem" boxShadow="md" borderRadius="md">
                     <div style={{ border: '0.1px solid black' }}>
-                        <Image  src={`http://localhost:3002/uploads/${product.image}`} alt={title} boxSize='35vw' borderRadius="md" />
+                        <Image  classname='singleimage' src={`http://localhost:3002/uploads/${product.image}`} alt={title} boxSize='35vw' borderRadius="md" />
                     </div>
                     <Box border="0.1px solid black"></Box>
                     <Box m="2rem" width="40vw" border="0">
@@ -59,11 +60,11 @@ const SellerSingle = () => {
                         <Box mt="0.5vw" border="0">
                             <Text fontSize="1vw" m="1vw" ml='13rem' w='35rem'>{product.description}</Text>
                             <Flex justifyContent="space-between" mt="1vw">
-                                <Box style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center"} }  >
+                                <Box className="availability-box" style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center"} }  >
                                     <FaCheckCircle size={20} color="green" style={{ marginRight: '0.5rem' }} />
                                     <Text fontSize="1vw" m="1vw" style={{width: '6rem'}}>Available: {product.available}</Text>
                                 </Box>
-                                <Box style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center", marginLeft:'1rem'} } >
+                                <Box className="sold-box" style={{background: '#ECC94B',borderRadius: '1rem',padding: '1rem 8rem',display:"flex", alignItems:"center", marginLeft:'1rem'} } >
                                     <FaShoppingCart size={20} color="red" style={{ marginRight: '0.5rem' }} />
                                     <Text fontSize="1vw" m="1vw" style={{width: '6rem'}}>Sold: {product.sold}</Text>
                                 </Box>

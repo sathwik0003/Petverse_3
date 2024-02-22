@@ -67,7 +67,7 @@ const SellerOrders = ({ bc }) => {
                           <p style={{ fontWeight: 'bold', marginRight: '34px', marginLeft: '22px' }}>Quantity: {product.quantity}</p>
                           <p style={{ fontWeight: 'bold', marginRight: '34px', marginLeft: '22px' }}>Price: ₹{product.price}</p>
                         </Box>
-                        <Link to={`/product/${product.title}`}>
+                        <Link to={`/sell/${bc}/${product.title}`}>
                           <button style={{ background: 'RGBA(0, 0, 0, 0.36)', color: 'black', width: '19rem', height: '3.5rem', margin: '1rem' }}>View Item</button>
                         </Link>
                       </Box>
