@@ -20,10 +20,10 @@ const morgan = require('morgan')
 const helmet = require('helmet')
 
 // Create a write stream (in append mode) for the log file
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 // Use morgan middleware with a custom stream for logging
-app.use(morgan('combined', { stream: accessLogStream }));
+// app.use(morgan('combined', { stream: accessLogStream }));
 
 
 
