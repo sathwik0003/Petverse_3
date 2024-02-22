@@ -216,7 +216,7 @@ const storage= multer.diskStorage({
   },
   filename: function (req, file, cb) {
       const title = req.body.title || 'untitled';
-      const address = req.body.address || 'noaddress'; 
+      const address = req.body.brand || 'nobc'; 
  
       const ext = file.originalname.split('.').pop();
  
@@ -727,7 +727,6 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     const { filename } = req.params;
     console.log(filename)
 
-    // Set the path to the uploads directory where your images are stored
     const imagePath = path.join(__dirname, 'uploads', filename);
     console.log(imagePath)
     res.sendFile(imagePath);
@@ -858,26 +857,29 @@ app.get('/api/wishlist/:userId', async (req, res) => {
 app.post('/api/wishlist/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId)
     const { product } = req.body;
-    console.log(product)
 
     let wishlist = await Wishlist.findOne({ userId });
-    console.log(wishlist)
 
     if (!wishlist) {
       wishlist = new Wishlist({ userId, products: [] });
     }
 
-    wishlist.products.push(product);
-    await wishlist.save();
-
-    res.json(wishlist);
+    // Check if the product already exists in the wishlist by title
+    const isProductExists = wishlist.products.some(p => p.title === product.title);
+    if (!isProductExists) {
+      wishlist.products.push(product);
+      await wishlist.save();
+      res.json(wishlist);
+    } else {
+      res.status(400).json({ error: 'Product already exists in wishlist' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.delete('/api/wishlist/:userId/:title', async (req, res) => {
   try {
@@ -911,21 +913,27 @@ app.get('/api/cart/:userId', async (req, res) => {
 app.post('/api/cart/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId)
     const { product } = req.body;
-    console.log(product)
 
     let cart = await Cart.findOne({ userId });
-    console.log(cart)
 
     if (!cart) {
       cart = new Cart({ userId, products: [] });
     }
 
-    cart.products.push(product);
-    await cart.save();
+    // Check if the product already exists in the cart
+    const existingProductIndex = cart.products.some((item) => item.title === product.title);
+    
 
-    res.json(cart);
+    if (!existingProductIndex) {
+      // If the product does not exist, add it to the cart
+      cart.products.push(product);
+      await cart.save();
+      res.json(cart);
+    } else {
+      // If the product already exists, send a message indicating that
+      res.status(400).json({ message: 'Product already exists in Cart' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -1222,7 +1230,7 @@ app.get('/fetchproducts/:brandname', async (req, res) => {
   try {
     // Replace with your database query to fetch products for the given brand
     const products = await BrandProducts.find({brandcode:brandname});
-    console.log(products)
+   
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
