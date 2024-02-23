@@ -23,7 +23,7 @@ const helmet = require('helmet')
 // const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 // Use morgan middleware with a custom stream for logging
-// app.use(morgan('combined', { stream: accessLogStream }));
+//app.use(morgan('combined', { stream: accessLogStream }));
 
 
 
@@ -365,11 +365,12 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       name: String,
       address: String,
       accountNumber: String,
-      cvv: String,
+    
       expiryDate: Date,
     },
     products: [{
       title: String,
+      brandcode:String,
       quantity: Number,
       price: Number,
       image: String
@@ -546,7 +547,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
         description :req.body.description,
         pet_category:req.body.pet_category,
         product_category:req.body.product_category,
-        total:req.body.quantity,
+       
         available:req.body.quantity,
         price:req.body.price,
         image: req.file.filename,
@@ -563,12 +564,12 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
 
 
-  app.delete('/api/products/:title', async (req, res) => {
-    const title = req.params.title;
+  app.delete('/api/products/:id', async (req, res) => {
+    const title = req.params.id;
   
     try {
       // Assuming BrandProducts is your Mongoose model
-      const deletedProduct = await BrandProducts.findOneAndDelete({title:title});
+      const deletedProduct = await BrandProducts.findOneAndDelete({_id:title});
   
       if (!deletedProduct) {
         return res.status(404).json({ message: 'Product not found' });
@@ -593,7 +594,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
           description: req.body.description,
           pet_category: req.body.pet_category,
           product_category: req.body.product_category,
-          total:req.body.quantity,
+          
           available: req.body.quantity,
           price: req.body.price,
           image: req.body.image,
@@ -1072,7 +1073,7 @@ app.post('/api/orders/:userId', async (req, res) => {
 
       if (existingProduct) {
         // Update available quantity
-        existingProduct.availableQuantity -= quantity;
+        existingProduct.available -= quantity;
         existingProduct.sold+=quantity;
         await existingProduct.save();
       }
@@ -1096,6 +1097,36 @@ app.get('/orders', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+app.get('/api/order', async (req, res) => {
+  try {
+    const { bc } = req.query;
+    
+    
+      // Find orders that contain products with the given brand code
+      const orders = await Order.find({ 'products.brandcode': bc });
+
+      // Filter products with the given brand code for each order
+      const ordersWithFilteredProducts = orders.map(order => {
+          const productsWithBrandCode = order.products.filter(product => product.brandcode === bc);
+          return {
+              orderId: order._id,
+              userId: order.userId,
+              paymentDetails: order.paymentDetails,
+              products: productsWithBrandCode,
+              totalAmount: order.totalAmount,
+              dateCreated: order.dateCreated
+          };
+      });
+
+      res.json(ordersWithFilteredProducts);
+  } catch (error) {
+      console.error('Error retrieving orders:', error);
+      res.status(500).json({ error: 'An error occurred while retrieving orders' });
+  }
+    
+  
+});
+
 
 app.post('/users/names', async (req, res) => {
   try {

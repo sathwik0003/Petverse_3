@@ -102,11 +102,12 @@ const PaymentForm = () => {
         name: nameValue,
         address:addressValue,
         accountNumber: accountValue,
-        cvv: cvvValue,
+       
         expiryDate: dateValue,
       },
       products: cart.products.map((item) => ({
         title: item.title,
+        brandcode:item.brandcode,
         quantity: item.quantity,
         price: item.price,
         image:item.image
@@ -227,7 +228,7 @@ const PaymentForm = () => {
           {cart.products.map((item) => (
             <div className="paymentone" key={item.id}>
               <div className="paymentok">
-                <Image src={item.image} alt={item.title} boxSize="8vw"/>
+                <Image  src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} boxSize="8vw"/>
               </div>
               <div className="paymentok">{item.title}</div>
               <div className="paymentok">{item.quantity}</div>

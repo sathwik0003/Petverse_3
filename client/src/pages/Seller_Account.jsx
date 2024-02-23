@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import DashBoardButton from './DashBoardButton';
-import Details from './Details';
-import BackGroundCard from './BackGroundCard';
-import { AiFillEdit } from 'react-icons/ai';
+
+import SellerDetails from '../componants/DashBoard/SellerDetails';
+
 import { useParams } from 'react-router-dom';
 import Navbar from './NavBar';
-
+import { Box } from '@chakra-ui/react';
+import SellerOrders from './SellerOrders';
 
 const BrandDashBoard = () => {
   const { bc } = useParams();
@@ -63,22 +63,25 @@ const BrandDashBoard = () => {
 
   return (
     <>
+   
+    <Box position="relative">
     <Navbar brand={bc}/>
-    <div style={dashboardStyle}>
-      <BackGroundCard />
-      <div style={backButtonStyle}>
-        <button>Back</button>
-      </div>
-      <div className="details" style={detailsStyle}>
-        {user !== null ? (
-          <Details user={user} />
-        ) : (
-          <p>Loading user details...</p>
-        )}
-        
-      </div>
-      
-    </div>
+      <Box>
+        <Box>
+          <h2 style={{display: 'flex',alignItems: 'center',justifyContent: 'center',marginTop: '49px',
+    fontWeight: 'bold',
+    fontSize: '48px'}}>Account Details</h2>
+          <Box>
+          <Box style={{display: 'flex',alignItems: 'center',justifyContent: 'center',background:'beige',margin: '5% 29%',
+    height: '19rem'}}>
+          {user !== null ? <SellerDetails user={user} style={{    width: '73%',
+    height: '20rem'}}/> : <p>Loading user details...</p>}
+          </Box>
+          </Box>
+        </Box>
+      </Box>
+    <SellerOrders bc={bc}/>
+    </Box>
     </>
   );
 };
