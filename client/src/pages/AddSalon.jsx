@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -11,8 +11,11 @@ import {
   Select,
   Button,
 } from '@chakra-ui/react';
-import axios from 'axios';
+
 import SidebarAdmin from '../componants/Admin/SideBarAdmin'
+import useInput from './use-input';
+const isNotEmpty = (value) => value.trim() !== '';
+const isPhone = (value) => /^((\+91)|\+)?[6789]\d{9}$/.test(value);
 
 const AddSalon = () => {
   const [locationCategory, setLocationCategory] = useState('');
@@ -25,29 +28,62 @@ const AddSalon = () => {
     setFile(e.target.files[0]);
   };
 
-  const [titleValue, setTitleValue] = useState('');
-  const titleChangeHandler = (event) => {
-    setTitleValue(event.target.value);
-  };
+  const {
+    value: titleValue,
+    isValid: titleIsValid,
+    hasError: titleHasError,
+    valueChangeHandler: titleChangeHandler,
+    inputBlurHandler: titleBlurHandler,
+    reset: resettitle,
+  } = useInput(isNotEmpty);
+const {
+    value: descriptionValue,
+    isValid: descriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+    reset: resetDescription,
+  } = useInput(isNotEmpty);
+const {
+    value: addressValue,
+    isValid: addressIsValid,
+    hasError: addressHasError,
+    valueChangeHandler: addressChangeHandler,
+    inputBlurHandler: addressBlurHandler,
+    reset: resetAddress,
+  } = useInput(isNotEmpty);
 
-  const [descriptionValue, setDescriptionValue] = useState('');
-  const descriptionChangeHandler = (event) => {
-    setDescriptionValue(event.target.value);
-  };
 
-  const [addressValue, setAddressValue] = useState('');
-  const addressChangeHandler = (event) => {
-    setAddressValue(event.target.value);
-  };
+  const {
+    value: phoneValue,
+    isValid: phoneIsValid,
+    hasError: phoneHasError,
+    valueChangeHandler: phoneChangeHandler,
+    inputBlurHandler: phoneBlurHandler,
+    reset: resetphone,
+  } = useInput(isPhone);
 
-  const [phoneValue, setPhoneValue] = useState('');
-  const phoneChangeHandler = (event) => {
-    setPhoneValue(event.target.value);
-  };
+
+
+  let formIsValid = false;
+  
+
+  if (titleIsValid && descriptionIsValid && addressIsValid && phoneIsValid ) {
+    formIsValid = true;
+  }
+
+  const titleClasses = titleHasError ? 'form-control invalid' : 'form-control';
+      const addressClasses = addressHasError ? 'form-control invalid' : 'form-control';
+      const phoneClasses = phoneHasError ? 'form-control invalid' : 'form-control';
+   
+      const descriptionClasses = descriptionHasError ? 'form-control invalid' : 'form-control';
+   
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    if(formIsValid){
     try {
+   
       const formData = new FormData();
       formData.append('title', titleValue);
       formData.append('address', addressValue);
@@ -65,7 +101,11 @@ const AddSalon = () => {
 
       if (response.ok) {
         console.log('Image Uploaded Successfully');
-       
+        resettitle();
+        
+      resetphone();
+      resetAddress();
+        resetDescription();
 
         
 
@@ -76,6 +116,9 @@ const AddSalon = () => {
     } catch (error) {
       console.error('Error during adding:', error);
     }
+  }else{
+    return;
+  }
   };
 
   return (
@@ -88,28 +131,32 @@ const AddSalon = () => {
             Add Salon
           </Heading>
           <form onSubmit={submitHandler} encType='multipart/form-data'>
-            <FormControl id="salonName" mb={4}>
+            <FormControl id="salonName" className={titleClasses} mb={4}>
               <FormLabel>Salon Name</FormLabel>
               <Input
                 type="text"
                 value={titleValue}
-                onChange={titleChangeHandler}
+            onChange={titleChangeHandler}
+            onBlur={titleBlurHandler}
                 required
                 size="lg"
               />
+              {titleHasError && <p style={{ color: '#b40e0e',fontSize:'10px'}}>Please enter a title.</p>}
             </FormControl>
 
-            <FormControl id="salonDescription" mb={4}>
+            <FormControl id="salonDescription" className={descriptionClasses} mb={4}>
               <FormLabel>Salon Description</FormLabel>
               <Textarea
-                value={descriptionValue}
-                onChange={descriptionChangeHandler}
+               value={descriptionValue}
+            onChange={descriptionChangeHandler}
+            onBlur={descriptionBlurHandler}
                 required
                 size="lg"
               />
+               {descriptionHasError && <p style={{ color: '#b40e0e',fontSize:'10px'}}>Please enter a description.</p>}
             </FormControl>
 
-            <FormControl id="salonAddress" mb={4}>
+            <FormControl id="salonAddress" className={addressClasses} mb={4}>
               <FormLabel>Salon Address</FormLabel>
               <Input
                 type="text"
@@ -117,7 +164,8 @@ const AddSalon = () => {
                 onChange={addressChangeHandler}
                 required
                 size="lg"
-              />
+                onBlur={addressBlurHandler}/>
+            {addressHasError && <p style={{ color: '#b40e0e',fontSize:'10px'}}>Please enter a address.</p>}
             </FormControl>
 
             <FormControl id="salonLocation" mb={4}>
@@ -135,7 +183,7 @@ const AddSalon = () => {
               </Select>
             </FormControl>
 
-            <FormControl id="salonPhoneNumber" mb={4}>
+            <FormControl id="salonPhoneNumber" mb={4} className={phoneClasses}>
               <FormLabel>Salon Phone Number</FormLabel>
               <Input
                 type="tel"
@@ -143,7 +191,8 @@ const AddSalon = () => {
                 onChange={phoneChangeHandler}
                 required
                 size="lg"
-              />
+                onBlur={phoneBlurHandler}/>
+            {phoneHasError && <p style={{ color: '#b40e0e',fontSize:'10px'}}>Please enter a phone.</p>}
             </FormControl>
 
             <FormControl id="salonImage" mb={4}>

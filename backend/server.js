@@ -722,6 +722,19 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
   });
+  app.get('/api/booking', async (req, res) => {
+    try {
+      console.log('hi')
+      const {title}=req.query;
+      const services = await salPayment.find({title:title});
+      res.json(services);
+     
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
+  });
+ 
 
   app.get('/uploads/:filename', (req, res) => {
     console.log('hi')

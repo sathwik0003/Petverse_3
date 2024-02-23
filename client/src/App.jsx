@@ -61,6 +61,7 @@ import CsvApp from './pages/csv';
 import SellerSingle from './pages/SellerSingle';
 import UserSignup from './pages/UserSignup';
 import UserLogin from './pages/UserLogin';
+import AdminBookings from './pages/AdminBookings';
 const App = () => {
  
 
@@ -68,6 +69,7 @@ const App = () => {
     <>
     <Routes>
     <Route path="/user/main" element={<MainUser />} />
+    <Route path="/admin/salon/:title" element={<AdminBookings />} />
     <Route path="/user/signup" element={<UserSignup />} />
     <Route path="/user/login" element={<UserLogin />} />
     <Route path="/csv" element={<CsvApp/>} />

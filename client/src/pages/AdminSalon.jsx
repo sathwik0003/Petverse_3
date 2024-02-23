@@ -22,6 +22,27 @@ const AdminSalon = () => {
     }
   };
 
+  const deleteProduct = async (title) => {
+    try {
+        const response = await fetch(`http://localhost:3002/api/salon/${title}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            console.log('Product deleted successfully');
+            // Update the state after successful deletion
+            setSalons(prevItems => prevItems.filter(item => item.title !== title));
+        } else {
+            console.error('Failed to delete product');
+        }
+    } catch (error) {
+        console.error('Error during product deletion:', error);
+    }}
+
+    const viewBookings= (title)=>{
+      window.location.href=`/admin/salon/${title}`
+    }
+
   return (
     <>
       <div>
@@ -34,7 +55,7 @@ const AdminSalon = () => {
                   src={`http://localhost:3002/uploads/${item.image}`}
                   alt="Salon Image"
                   className="img-fluid"
-                  style={{ height: '13rem' }}
+                  style={{ height: '13rem', margin:'3rem 1rem' }}
                 />
               </div>
               <div className="content-container">
@@ -49,6 +70,15 @@ const AdminSalon = () => {
                 <div className="location">
                   <h6><b>Phone:</b> {item.phoneNumber}</h6>
                 </div>
+              </div>
+              <div>
+              <button>Edit</button>
+              </div>
+              <div>
+              <button onClick={() => deleteProduct(item.title)}>Delete</button>
+              </div>
+              <div>
+              <button style={{background:'green'}} onClick={()=>viewBookings(item.title)}>View Bookings</button>
               </div>
             </div>
           ))}

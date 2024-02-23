@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import './AdminOrders.css';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 
+import { useParams } from 'react-router-dom';
+
+import { Image, Box } from '@chakra-ui/react';
+
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedOrder, setExpandedOrder] = useState(null);
+  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -41,63 +45,104 @@ const AdminOrders = () => {
 
   const groupedOrders = groupOrdersByUserId();
 
-  const getProfilePic = (userId) => {
-    return userId.charAt(0).toUpperCase();
-  };
-
-  const toggleOrder = (userId) => {
-    if (expandedOrder === userId) {
-      setExpandedOrder(null);
-    } else {
-      setExpandedOrder(userId);
-    }
-  };
+  
 
   return (
-    <div className="admin-orders">
-    
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        Object.keys(groupedOrders).map(userId => (
-          <div key={userId} className="user-orders">
-            <h3 style={{ display: "flex", alignItems: "center", cursor: "pointer" }} onClick={() => toggleOrder(userId)}>
-              <div className="profile-pic">{getProfilePic(userId)}</div> 
-              <span>{userId}</span>
-              <span>{expandedOrder === userId ? '↓' : '→'}</span>
-            </h3>
-            {expandedOrder === userId && (
-              <ul className="order-list">
-                {groupedOrders[userId].map(order => (
-                  <li key={order._id} className="order-item">
-                    <div className="order-info">
-                      <p><b>Order ID:</b> {order._id}</p>
-                      <p><b>Date:</b> {order.dateCreated}</p>
-                      <p><b>Username:</b> {order.username}</p>
-                    </div>
-                    <div className="product-details">
-                      {order.products.map(product => (
-                        <div key={product.title} style={{display:'flex'}}>
-                          <img src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} style={{width:'12rem'}} />
-                          <div>
-                            <p>{product.title}</p>
-                            <p>Quantity: {product.quantity}</p>
-                            <p>Price: ₹{product.price}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="order-total">
-                      <p><b>Total Amount: ₹{order.totalAmount}</b></p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))
-      )}
-    </div>
+    <>
+    <SidebarAdmin/>
+      <div className="admin-orders">
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          Object.keys(groupedOrders).map(userId => (
+            <div key={userId} className="user-orders"  style={{marginLeft:'21vw'}}>
+              {groupedOrders[userId].map(order => (
+                <Box key={order._id} style={{ borderWidth: '1px', padding: '0px', marginBottom: '20px', border: '1px solid #ddd', background: '#f9f9f9', borderRadius: '9px' }}>
+                  <Box style={{ display: 'flex',flexWrap:'wrap', borderBottom: '1px solid #ddd' }}>
+                    <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Name</p>
+                      <p style={{ display: 'flex' ,flexWrap:'wrap'}}>
+                        <b> {userId}</b>
+                      </p>
+                    </Box>
+                    <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Date</p>
+                      <b> <p>17-02-2023</p></b>
+                    </Box>
+                    
+                    <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
+                      <p style={{
+                        margin: '1px',
+                        fontSize: '21px'
+                      }}>Order Id</p>
+                      <b> <p>{order._id}</p></b>
+                    </Box>
+                  </Box>
+                  <ul className="order-list">
+                    <li className="order-item">
+                      <div className="product-details">
+                        {order.products.map(product => (
+                          <>
+                            <div key={product.title} style={{ display: 'flex',flexWrap:'wrap' }}>
+                              <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} boxSize="5vw" style={{ margin: '1px 58px' }} />
+                              <Box style={{ display: 'flex',flexWrap:'wrap' }} >
+                                <Box style={{ width: '27rem' }}>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>{product.title}</p>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>Quantity: {product.quantity}</p>
+                                  <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: '34px',
+                                    marginLeft: '22px'
+                                  }}>Price: ₹{product.price}</p>
+                                </Box>
+                               
+
+                              </Box>
+
+                            </div>
+
+                          </>
+                        ))}
+                        <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
+
+<p style={{
+  margin: '1px',
+  fontSize: '21px'
+}}>
+  Total Amount
+</p>
+<p>
+  <b> ₹{order.totalAmount}</b>
+</p>
+
+
+
+</Box>
+          
+                      </div>
+                    </li>
+                  </ul>
+                </Box>
+              ))}
+            </div>
+          ))
+        )}
+      </div>
+    </>
   );
 };
 
