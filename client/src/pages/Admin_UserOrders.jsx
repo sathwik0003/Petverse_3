@@ -53,7 +53,7 @@ const Admin_UserOrders = () => {
           <p>Loading...</p>
         ) : (
           Object.keys(groupedOrders).map(userId => (
-            <div key={userId} className="user-orders" >
+            <div key={userId} className="user-orders"  style={{marginLeft:'21vw'}}>
               {groupedOrders[userId].map(order => (
                 <Box key={order._id} style={{ borderWidth: '1px', padding: '0px', marginBottom: '20px', border: '1px solid #ddd', background: '#f9f9f9', borderRadius: '9px' }}>
                   <Box style={{ display: 'flex',flexWrap:'wrap', borderBottom: '1px solid #ddd' }}>
@@ -107,21 +107,7 @@ const Admin_UserOrders = () => {
                                     marginLeft: '22px'
                                   }}>Price: ₹{product.price}</p>
                                 </Box>
-                                <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
-
-                      <p style={{
-                        margin: '1px',
-                        fontSize: '21px'
-                      }}>
-                        Total Amount
-                      </p>
-                      <p>
-                        <b> ₹{order.totalAmount}</b>
-                      </p>
-
-
-
-                    </Box>
+                              
                                 
 
                               </Box>
@@ -130,10 +116,26 @@ const Admin_UserOrders = () => {
 
                           </>
                         ))}
+                        <Box style={{ width: '20rem', padding: '1px 44px', fontSize: '16px' }}>
+
+<p style={{
+  margin: '1px',
+  fontSize: '21px'
+}}>
+  Total Amount
+</p>
+<p>
+  <b> ₹{order.totalAmount}</b>
+</p>
+
+
+
+</Box>
                       </div>
                     </li>
                   </ul>
                 </Box>
+                
               ))}
             </div>
           ))

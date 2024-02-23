@@ -14,8 +14,8 @@ const SidebarAdmin = () => {
         <h2>PETVERSE</h2>
         <ul>
           <li><Link to='/admin/dashboard' className="custom-link">Home</Link></li>
-          <li><Link to='/addsalon' className="custom-link" >Add Saloon</Link></li>
-          <li><Link to='/admin/salon' className="custom-link">View Saloon</Link></li>
+          <li><Link to='/addsalon' className="custom-link" >Add Salon</Link></li>
+          <li><Link to='/admin/salon' className="custom-link">View Salon</Link></li>
           <li><Link to='/admin/complaints' className="custom-link">View Complaints</Link></li>
           <li><Link to='/admin/services' className="custom-link">View Services</Link></li>
           <li><Link to='/admin/products' className="custom-link">View Products</Link></li>
