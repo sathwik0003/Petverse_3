@@ -7,7 +7,7 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3002;
 const bcrypt=require('bcrypt')
-const Router=require('router')
+const router = express.Router();
 const nodemailer = require('nodemailer');
 
 
@@ -20,10 +20,10 @@ const morgan = require('morgan')
 const helmet = require('helmet')
 
 // Create a write stream (in append mode) for the log file
-// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 // Use morgan middleware with a custom stream for logging
-//app.use(morgan('combined', { stream: accessLogStream }));
+app.use(morgan('combined', { stream: accessLogStream }));
 
 
 
@@ -254,7 +254,7 @@ app.post('/uploadsalon', uploadsalon.single('image'), (req, res) => {
   }
 });
 
-router.post('/csvupload',upload.single('file'), (req, res) => {
+app.post('/csvupload',upload.single('file'), (req, res) => {
   const file = req.file;
   console.log(file)
 
@@ -273,7 +273,7 @@ router.post('/csvupload',upload.single('file'), (req, res) => {
     });
 });
 
-app.use('/',Router)
+
 
 
 
@@ -617,7 +617,7 @@ app.use('/',Router)
   
 
 
-  app.get('/api/products/:brandcode', async (req, res) => {
+  router.get('/api/products/:brandcode', async (req, res) => {
     try {
       const products = await BrandProducts.find({ brandcode: req.params.brandcode });
       console.log(products)
@@ -627,7 +627,8 @@ app.use('/',Router)
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/api/seller/:brandcode', async (req, res) => {
+ 
+  router.get('/api/seller/:brandcode', async (req, res) => {
     try {
       const seller = await Brand.findOne({ brandcode: req.params.brandcode });
       if (!seller) {
@@ -649,7 +650,7 @@ app.use('/',Router)
     }
   });
 
-  app.get('/products', async (req, res) => {
+  router.get('/products', async (req, res) => {
     console.log('Request received for /products');
     const { specie, brand, price, category } = req.query;
     console.log('hi');
@@ -675,7 +676,7 @@ app.use('/',Router)
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/salon/:location', async (req, res) => {
+  router.get('/salon/:location', async (req, res) => {
     
     const {location}=req.params
     
@@ -695,7 +696,7 @@ app.use('/',Router)
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/salon', async (req, res) => {
+  router.get('/salon', async (req, res) => {
     
   try {
      
@@ -710,7 +711,7 @@ app.use('/',Router)
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-
+  app.use('/',router)
   app.get('/api/services', async (req, res) => {
     try {
       const services = await salPayment.find();
@@ -1397,7 +1398,10 @@ app.get('/api/salonss/total', async (req, res) => {
 
 
 
-
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 
 
