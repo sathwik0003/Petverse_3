@@ -11,6 +11,7 @@ import './AdminDashboard.css';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 import AdminHeader from '../componants/Admin/AdminHeader';
 import { Link } from 'react-router-dom';
+import Loader from '../componants/Loader';
 
 const StatisticCard = ({ icon, title, initialValue, value, background }) => {
   const [displayValue, setDisplayValue] = useState(initialValue);
@@ -118,7 +119,7 @@ const AdminDashboard = () => {
   
   // If loading, return null until data is fetched
   if (isLoading) {
-    return null;
+    return <Loader/>;
   }
 
   
@@ -158,7 +159,7 @@ const AdminDashboard = () => {
           />
         </Link>
 
-        <Link to='admin/products'>
+        <Link to='/admin/products'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faShoppingCart} size="2x" />}
           title="Products"
@@ -167,7 +168,7 @@ const AdminDashboard = () => {
           background="373b44"
         />
         </Link>
-        <Link to='admin/complaints'>
+        <Link to='/admin/complaints'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCommentAlt} size="2x" />}
           title="Complaints"
@@ -183,7 +184,7 @@ const AdminDashboard = () => {
           value={data.bagValue}
           background="FF9800"
         />
-        <Link to='admin/salons'>
+        <Link to='/admin/salon'>
         <StatisticCard
           icon={<FontAwesomeIcon icon={faCut} size="2x" />}
           title="Saloons"
