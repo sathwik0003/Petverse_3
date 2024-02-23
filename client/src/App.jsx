@@ -62,6 +62,7 @@ import SellerSingle from './pages/SellerSingle';
 import UserSignup from './pages/UserSignup';
 import UserLogin from './pages/UserLogin';
 import AdminBookings from './pages/AdminBookings';
+import UserServices from './pages/UserServices';
 const App = () => {
  
 
@@ -106,8 +107,9 @@ const App = () => {
       <Route path="/saloonsingle/:title/:userid" element={<SaloonSingle />} />
       <Route path="/user/payment/:userid" element={<PaymentForm/>} />
       <Route path="/user/orders/:userid" element={<UserOrders/>} />
+      <Route path="/user/services/:userid" element={<UserServices/>} />
       <Route path="/salon/payment/:userid/:title/:service/:slot" element={<SalonPayment/>} />
-      <Route path="/ticket/:userid" element={<Ticket/>} />
+      <Route path="/ticket/:userid/:title/:service/:slot" element={<Ticket/>} />
       <Route path="/salons/:userid?/:location" element={<SaloonList/>} />
      
       <Route path="/data" element={<DataComponent

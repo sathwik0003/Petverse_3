@@ -1,19 +1,21 @@
 import React,{useState} from 'react';
 // import { logout,signInUser } from './authSlice';
-// import { useParams } from 'react-router-dom';
+ import { useParams } from 'react-router-dom';
 import Navbar from './NavBar';
 import './Logout.css';
 
   const Logout = () => {
+    const {bc}=useParams();
     const [showConfirmation, setShowConfirmation] = useState(true);
   
     const handleLogout = () => {
-      window.location.href='/'
+      window.location.href=`/`
       console.log('Logging out...');
       setShowConfirmation(false);
     };
   
     const handleCancel = () => {
+      window.location.href=`/add/${bc}`
       setShowConfirmation(false);
     };
   

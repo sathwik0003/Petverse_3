@@ -5,10 +5,13 @@ import Header from '../componants/Header';
 import { Image, Box } from '@chakra-ui/react';
 import { FaUser } from 'react-icons/fa'; // Importing the FaUser icon
 import { Link } from 'react-router-dom';
-const UserOrders = ({ userid }) => {
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+const UserOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [cart, setCart] = useState([]);
+const {userid}=useParams()
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -46,11 +49,12 @@ const UserOrders = ({ userid }) => {
 
   const addToCart = async (product) => {
     try {
+      console.log('hi')
 
       if (!cart.some((item) => item.title === product.title)) {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
-        setCart((prevCart) => [...prevCart, product]);
-        setShowToast(true);
+        
+       
         const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
           method: 'POST',
           headers: {
@@ -60,21 +64,34 @@ const UserOrders = ({ userid }) => {
             product: { id, title, description, pet_category, product_category, available, price, image, brandcode },
           }),
         });
+        if(response.status===400){
+          toast.info('Product already in Cart');
+        }
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
 
-
+       
       }
-      // You can handle success, e.g., show a toast or update UI
+      setCart((prevCart) => [...prevCart, product]);
+      toast.success('Added to Cart');
     } catch (error) {
       console.error('Error adding the cart:', error);
     }
   };
+ 
+
 
   return (
     <>
+    <Header></Header>
+    <ToastContainer />
+    <h3 style={{fontWeight: 'bold',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '1rem'}}>Your Orders</h3>
       <div className="admin-orders">
         {loading ? (
           <p>Loading...</p>
@@ -154,17 +171,11 @@ const UserOrders = ({ userid }) => {
                                     color: 'black',
                                     width: '19rem',
                                     height: '3.5rem',
-                                    margin: '1rem'
+                                    margin: '1rem 5rem'
                                   }}>View Item</button>
                                 </Link>
 
-                                <button style={{
-                                  background: 'RGBA(0, 0, 0, 0.36)',
-                                  color: 'black',
-                                  width: '19rem',
-                                  height: '3.5rem',
-                                  margin: '1rem'
-                                }} onClick={() => addToCart(product)}>Buy Again</button>
+                               
                               </Box>
 
                             </div>
@@ -180,6 +191,7 @@ const UserOrders = ({ userid }) => {
           ))
         )}
       </div>
+      <Link to={`/User/Dashboard/${userid}`}>Back to Dashboard</Link>
     </>
   );
 };

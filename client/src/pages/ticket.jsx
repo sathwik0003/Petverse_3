@@ -1,29 +1,75 @@
+
+
+
 import React from 'react';
-import { Image } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Ticket = () => {
- 
+    const {userid}=useParams()
+    const {title}=useParams()
+    const {service}=useParams()
+    const {slot}=useParams()
   return (
-    <>
-        <div  className="ucard-container">
-          <div className="uprofile-pic">
-            <Image
-              borderRadius="full"
-              boxSize="135px"
-              src={`https://ui-avatars.com/api/?name=sathwik`}
-              alt="User Name"
-            />
+    <html>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <style>
+        {`
+          body {
+            text-align: center;
+            padding: 40px 0;
+            background: #EBF0F5;
+          }
+          h1 {
+            color: #88B04B;
+            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+            font-weight: 900;
+            font-size: 40px;
+            margin-bottom: 10px;
+          }
+          p {
+            color: #404F5E;
+            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+            font-size: 20px;
+            margin: 0;
+          }
+          i {
+            color: #9ABC66;
+            font-size: 100px;
+            line-height: 200px;
+            margin-left: -15px;
+          }
+          .card {
+            background: white;
+            padding: 60px;
+            border-radius: 4px;
+            box-shadow: 0 2px 3px #C8D0D8;
+            display: inline-block;
+            margin: 0 auto;
+          }
+        `}
+      </style>
+      <body>
+        <div className="card" style={{    width: '36rem',
+    height: '36rem'}}>
+          <div style={{ borderRadius: '200px', height: '200px', width: '200px', background: '#F8FAF5', margin: '0 auto' }}>
+            <i className="checkmark">✓</i>
           </div>
-          <div className="uuser-content">
-            <h2>hi</h2>
-            <p><b>hi</b></p>
-            <p><b>hi</b></p>
+          <div>
+          <h1>Booking Successful</h1>
           </div>
+          <p>{title}</p>
+          <p>{service}</p>
+          <p>{slot}</p>
+          <a href={`/user/main/${userid}`}>Go to Home page</a>
         </div>
-    </>
+      </body>
+    </html>
   );
 };
 

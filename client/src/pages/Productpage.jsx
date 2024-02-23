@@ -185,8 +185,10 @@ const Productpage = () => {
         <select className='productselect' placeholder="Filter by Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value)}>
           <option value="All">All Brands</option>
           <option value="pdg">Pedigree</option>
-          <option value="td">Top Dog</option>
+          <option value="tr">Trixie</option>
+          <option value="vl">Vet Life</option>
           <option value="gt">Goofy Tails</option>
+         
 
           {Array.from(new Set(items.map((item) => item.brandName))).map((brand) => (
             <option key={brand} value={brand}>

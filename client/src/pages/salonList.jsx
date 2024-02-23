@@ -5,7 +5,7 @@ import Header from '../componants/Header'
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
-import { ChakraBaseProvider } from '@chakra-ui/react';
+
 const SaloonList = () => {
   const { userid } = useParams();
   
@@ -28,6 +28,7 @@ const SaloonList = () => {
 
   const fetchSalons = async () => {
     try {
+      
       const response = await fetch(`http://localhost:3002/salon/${location}`);
 
       if (!response.ok) {
@@ -44,7 +45,7 @@ const SaloonList = () => {
 
   return (
     <>
-    <ChakraBaseProvider>
+    
       {userid !== undefined ? (
         <Header />
       ) : <Heade2r/>}
@@ -81,7 +82,7 @@ const SaloonList = () => {
         ))}
         </>
       </div>
-      </ChakraBaseProvider>
+    
     </>
   );
 }

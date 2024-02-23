@@ -176,6 +176,7 @@ const {
                 required
                 size="lg"
               >
+              <option value="">Select  Location</option>
                 <option value="Hyderabad">Hyderabad</option>
                 <option value="Bangalore">Bangalore</option>
                 <option value="Mumbai">Mumbai</option>

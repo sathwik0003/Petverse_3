@@ -7,7 +7,7 @@ const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3002;
 const bcrypt=require('bcrypt')
-
+const Router=require('router')
 const nodemailer = require('nodemailer');
 
 
@@ -179,6 +179,7 @@ const brandSchema = new mongoose.Schema({
       type:String,
       required:true,
     },
+    dateCreated: { type: Date, default: Date.now }
   });
   
   const salPayment = mongoose.model('salPayment', salpaymentSchema);
@@ -253,7 +254,7 @@ app.post('/uploadsalon', uploadsalon.single('image'), (req, res) => {
   }
 });
 
-app.post('/csvupload',upload.single('file'), (req, res) => {
+router.post('/csvupload',upload.single('file'), (req, res) => {
   const file = req.file;
   console.log(file)
 
@@ -272,7 +273,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     });
 });
 
-
+app.use('/',Router)
 
 
 
@@ -675,11 +676,9 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     }
   });
   app.get('/salon/:location', async (req, res) => {
+    
     const {location}=req.params
     
-   
-   
-  
     try {
      
   
@@ -689,7 +688,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       });
     
       
-  
+ 
       res.json(salons);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -727,6 +726,19 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       console.log('hi')
       const {title}=req.query;
       const services = await salPayment.find({title:title});
+      res.json(services);
+     
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
+  });
+  app.get('/api/service', async (req, res) => {
+    try {
+      console.log('hi')
+      const {username}=req.query;
+      console.log(username)
+      const services = await salPayment.find({userid:username});
       res.json(services);
      
     } catch (error) {

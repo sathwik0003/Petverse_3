@@ -88,7 +88,7 @@ const SalonPayment = () => {
       }
 
       // Redirect or show success message
-      window.location.href=`/ticket/${userid}`
+      window.location.href=`/ticket/${userid}/${title}/${service}/${slot}`
       resetCvv();
       resetAccount();
       resetName();

@@ -7,7 +7,7 @@ import { FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 const SaloonDetails = ({ title, image, description, address, phone, userid }) => {
   const [selectedService, setSelectedService] = useState('');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
-
+console.log(image)
   const handleSubmit = (event) => {
     event.preventDefault();
     // Accessing the selected values from state
@@ -32,7 +32,7 @@ const SaloonDetails = ({ title, image, description, address, phone, userid }) =>
             </h1>
           </div>
           <div className="saloondetails">
-            <img src={image} alt="" />
+            <img src={`http://localhost:3002/uploads/${image}`} alt="" />
           </div>
         </div>
         <div className="salp">
@@ -63,6 +63,7 @@ const SaloonDetails = ({ title, image, description, address, phone, userid }) =>
     fontWeight: 'bold'}}>Services</p>
               <br />
               <select id="service" name="service" onChange={(e) => setSelectedService(e.target.value)}>
+              <option value="">Select Service</option>
                 <option value="Spa Bath">Spa Bath</option>
                 <option value="Full Service">Full Service</option>
                 <option value="Transfurmation">Transfurmation</option>
@@ -75,6 +76,7 @@ const SaloonDetails = ({ title, image, description, address, phone, userid }) =>
     fontWeight: 'bold'}}>Book a slot </p>
             <br />
             <select id="timeslot" name="timeslot" onChange={(e) => setSelectedTimeSlot(e.target.value)}>
+            <option value="">Select Time Slot</option>
               <option value="10am - 11am">10am - 11am</option>
               <option value="11am - 12pm">11am - 12pm</option>
               <option value="2pm - 3pm">2pm - 3pm</option>
