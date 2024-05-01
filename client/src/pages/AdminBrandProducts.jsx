@@ -15,7 +15,7 @@ const AdminBrandProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/fetchproducts/${brandname}`);
+      const response = await fetch(https://petverse-3.onrender.com/fetchproducts/${brandname}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -43,7 +43,7 @@ const AdminBrandProducts = () => {
               
               
          <Image
-           src={`http://localhost:3002/uploads/${item.image}`}
+           src={`https://petverse-3.onrender.com/uploads/${item.image}`}
            alt={item.title}
            objectFit="cover"
            boxSize="20vw"
