@@ -6,44 +6,94 @@ const dotenv= require('dotenv');
 const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 3002;
-const bcrypt=require('bcrypt')
 
+const router = express.Router();
 const nodemailer = require('nodemailer');
+const swaggerJSDoc = require('swagger-jsdoc') 
+const swaggerUi = require('swagger-ui-express') 
+const redis = require('redis');
 
 
+
+const options={
+	definition:{
+		openapi:'3.0.0',
+		info:{
+			title:'Petverse',
+			version: '1.0.0'
+		},
+		servers:[{
+
+			url: 'http://localhost:3002/'
+		}
+
+		]
+	},
+	apis:['./server.js']
+}
+
+const rclient = redis.createClient({
+  password: 'qBYOhGydQCyB4xj6xD22i6hOJub6jeht',
+  socket: {
+      host: 'redis-14720.c241.us-east-1-4.ec2.redns.redis-cloud.com',
+      port: 14720
+  }
+});
+
+
+// Call Redis connection immediately
+rclient.connect();
+
+
+
+// Error handling for Redis client
+rclient.on('error', (err) => {
+  console.error('Redis client error:', err);
+});
+
+// Check Redis connection
+rclient.on('connect', () => {
+  console.log('Connected to Redis server');
+});
+
+
+// Middleware to cache user data from MongoDB to Redis
+
+const swaggerspec = swaggerJSDoc(options)
+app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(swaggerspec))
+
+//multer
 const multer = require('multer');
 const path=require('path')
 const csv = require('csv-parser');
 const fs = require('fs');
-
+//morgan
 const morgan = require('morgan')
+//helmet
 const helmet = require('helmet')
 
-// Create a write stream (in append mode) for the log file
-// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
-// Use morgan middleware with a custom stream for logging
-//app.use(morgan('combined', { stream: accessLogStream }));
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 
+app.use(morgan('combined', { stream: accessLogStream }));
 
 
-
-
-
+//cors
 app.use(cors());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+//express.json
 app.use(express.json());
 dotenv.config({
     path:'./config.env'
     })
-// Connect to your MongoDB database
+
 mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log('DB connected sucessfully....')
     })
     const con=mongoose.connection;
 
-// Define your MongoDB schema and model using Mongoose
+
 const complaintSchema = new mongoose.Schema({
     username: { type: String, required: true },
     complaint: { type: String },
@@ -53,32 +103,38 @@ const complaintSchema = new mongoose.Schema({
 const Complaint = mongoose.model('Complaint', complaintSchema);
 
 const brandSchema = new mongoose.Schema({
-    brandname: String,
-    phoneNumber: {
+  brandname: {
+      type: String,
+      required: true
+  },
+  phoneNumber: {
       type: String,
       unique: true,
-      required:true,
-    },
-    email: {
+      required: true,
+  },
+  email: {
       type: String,
       unique: true,
-      required:true,
-    },
-    brandcode: {
+      required: true,
+  },
+  brandcode: {
       type: String,
       unique: true,
-      required:true,
-      index:true,
-    },
-    password:{
-      type:String,
-      required:true,
-    } 
-  });
+      required: true,
+      index: true, // Indexing brandcode field
+  },
+  password: {
+      type: String,
+      required: true,
+  } 
+});
 
-  const Brand = mongoose.model('Brand',brandSchema)
+// Indexing brandname field
+brandSchema.index({ brandname: 1 });
 
-  const brandproductSchema = new mongoose.Schema({
+const Brand = mongoose.model('Brand', brandSchema);
+
+const brandproductSchema = new mongoose.Schema({
     title: {
       type: String,
       required: true
@@ -110,7 +166,8 @@ const brandSchema = new mongoose.Schema({
   
     price: {
       type: Number,
-      required: true
+      required: true,
+      index:true
     },
     image: {
       type: String,
@@ -122,10 +179,19 @@ const brandSchema = new mongoose.Schema({
     }
    
   });
+// Indexing brandname field
+  brandproductSchema.index({ brandname: 1 });
+  brandproductSchema.index({ product_category: 1, title: 1 });
 
   const BrandProducts = mongoose.model('BrandProducts', brandproductSchema);
 
- 
+  BrandProducts.collection.getIndexes(function(err, indexes) {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log(indexes);
+    }
+});
   const salonSchema = new mongoose.Schema({
     title: {
       type: String,
@@ -183,102 +249,11 @@ const brandSchema = new mongoose.Schema({
       type:String,
       required:true,
     },
+    dateCreated: { type: Date, default: Date.now }
   });
   
   const salPayment = mongoose.model('salPayment', salpaymentSchema);
-  
-  // Routes
-  app.post('/salon/payments', async (req, res) => {
-    try {
-      const { userid, title, service, slot, addressValue, accountValue } = req.body;
-      console.log(req.body)
-      const payment = new salPayment({ userid, title, service, slot, addressValue, accountValue });
-      await payment.save();
-      res.status(201).json({ message: 'Payment details stored successfully.' });
-    } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-
   const Salon = mongoose.model('Salon', salonSchema);
-
-  const storagesalon = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads');
-    },
-    filename: function (req, file, cb) {
-        const title = req.body.title || 'untitled';
-        const address = req.body.address || 'noaddress'; 
-        const ext = file.originalname.split('.').pop();
-        const filename = `${title}_${address}.${ext}`;
-        cb(null, filename);
-    }
-});
-const storage= multer.diskStorage({
-  destination: function (req, file, cb) {
-      cb(null, 'uploads');
-  },
-  filename: function (req, file, cb) {
-      const title = req.body.title || 'untitled';
-      const address = req.body.brand || 'nobc'; 
- 
-      const ext = file.originalname.split('.').pop();
- 
-      const filename = `${title}_${address}.${ext}`;
- 
-      cb(null, filename);
-  }
-});
-
-const upload = multer({ storage: storage });
-const uploadsalon = multer({ storage: storagesalon });
-
-app.post('/uploadsalon', uploadsalon.single('image'), (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-    console.log(req.body)
-    const imageUrl = req.file.filename; 
-    console.log(imageUrl)
-    const newSalon = new Salon({
-      title: req.body.title,
-      description: req.body.description,
-      location_category: req.body.location,
-      phoneNumber: req.body.phoneNumber,
-      address: req.body.address,
-      image: req.file.filename, // Storing only the filename
-    });
-    newSalon.save();
-    return res.status(200).json({ imageUrl: imageUrl });
-  } catch (error) {
-    console.error('Error during image upload:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.post('/csvupload',upload.single('file'), (req, res) => {
-  const file = req.file;
-  console.log(file)
-
-  fs.createReadStream(file.path)
-    .pipe(csv())
-    .on('data', async (row) => {
-      try {
-        console.log(row)
-        await BrandProducts.create(row);
-      } catch (error) {
-        console.error('Error creating product:', error);
-      }
-    })
-    .on('end', () => {
-      res.send('Products added successfully');
-    });
-});
-
-
-
-
 
   const userSchema = new mongoose.Schema({
     fullname: String,
@@ -286,6 +261,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       type: String,
       unique: true,
       required:true,
+      index:true
     },
     email: {
       type: String,
@@ -303,7 +279,7 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       required:true,
     } 
   });
-
+  userSchema.index({ username: 1, phoneNumber: 1 });
   const User = mongoose.model('User', userSchema);
   const wishlistSchema = new mongoose.Schema({
     userId: String,
@@ -378,15 +354,18 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       quantity: Number,
       price: Number,
       image: String
-      // Add other product details if needed
+    
     }],
-    totalAmount: Number,
-    dateCreated: { type: Date, default: Date.now } // Adding dateCreated field
+    totalAmount: {
+      type:Number,
+      index:true},
+    dateCreated: { type: Date, default: Date.now } 
 });
 
+orderSchema.index({ totalAmount: 1 });
   
-  // Create the Order model
   const Order = mongoose.model('Order', orderSchema);
+ 
   const phoneRegex = /^[6789]\d{9}$/; 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
   const passwordRegex = /^.{8,}$/;
@@ -406,6 +385,37 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     return valid;
   }
 
+  /**
+ * @swagger
+ * /api/user/register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullname:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '201':
+ *         description: User registered successfully
+ *       '400':
+ *         description: Username already exists
+ *       '500':
+ *         description: Internal server error
+ */
+
   app.post('/api/user/register',async (req,res)=>{
     try{
    console.log(req.body);
@@ -414,14 +424,14 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'Username already exists' });
     }
-    const hashpass = await bcrypt.hash(req.body.password, 10);
+    
     if (svalidateform(req.body.phone, req.body.email, req.body.password)) {
       const newUser=new User({
         fullname: req.body.fullname,
       phoneNumber: req.body.phone,
       email: req.body.email,
      username: req.body.username,
-      password: hashpass
+      password: req.body.password
     })
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully'});}}
@@ -432,6 +442,45 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     
    
    });
+
+
+   /**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register a new seller
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullname:
+ *                 type: string
+ *                 description: The full name of the seller
+ *               phone:
+ *                 type: string
+ *                 description: The phone number of the seller
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The email address of the seller
+ *               username:
+ *                 type: string
+ *                 description: The username of the seller
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password for the seller
+ *     responses:
+ *       201:
+ *         description: Seller registered successfully
+ *       400:
+ *         description: Username already exists
+ *       500:
+ *         description: Internal server error
+ */
   app.post('/api/register', async (req, res) => {
     try {
       
@@ -445,14 +494,14 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
     
-    const hashpass = await bcrypt.hash(req.body.password, 10);
+    
     if (svalidateform(req.body.phone, req.body.email, req.body.password)) {
     const newSeller=new Brand({
         brandname: req.body.fullname,
       phoneNumber: req.body.phone,
       email: req.body.email,
      brandcode: req.body.username,
-      password: hashpass
+      password: req.body.password
     })
     await newSeller.save();
     
@@ -464,6 +513,31 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     }
   });
 
+  /**
+ * @swagger
+ * /api/user/login:
+ *   post:
+ *     summary: Login user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Login successful
+ *       '401':
+ *         description: Invalid username or password
+ *       '500':
+ *         description: Internal server error
+ */
+
   app.post('/api/user/login', async (req, res) => {
     console.log(req.body);
    const password=req.body.password
@@ -473,23 +547,20 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
    console.log('Found user:', userfo);
    
     try {
-      // Find the seller by username
+    
       const userfound = await User.findOne({ username: username.trim()});
      console.log(userfound)
       if (userfound) {
-        // Compare the provided password with the hashed password stored in the database
+       
         console.log(userfound.password)
-        const passwordMatch = await bcrypt.compare(password, userfound.password);
-       console.log(passwordMatch)
-        if (passwordMatch) {
-          // Passwords match, authentication successful
-          return res.status(200).json({ message: 'Login successful' });
-        } else {
-          // Passwords do not match, authentication failed
+        if(password==userfound.password){
+          return res.status(200).json({ message: 'Login successful' });}
+        else {
+        
           return res.status(401).json({ message: 'Invalid username or password' });
         }
       } else {
-        // Seller not found, authentication failed
+       
         return res.status(401).json({ message: 'Invalid username or password' });
       }
     } catch (error) {
@@ -499,6 +570,33 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
 
 
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Authenticate seller
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the seller
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: The password for the seller
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid username or password
+ *       500:
+ *         description: Internal server error
+ */
 
 
 
@@ -511,23 +609,22 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
    console.log('Found seller:', seller);
    
     try {
-      // Find the seller by username
+     
       const seller = await Brand.findOne({ brandcode: brandcode.trim()});
      console.log(seller)
       if (seller) {
-        // Compare the provided password with the hashed password stored in the database
+        
         console.log(seller.password)
-        const passwordMatch = await bcrypt.compare(password, seller.password);
-       console.log(passwordMatch)
-        if (passwordMatch) {
-          // Passwords match, authentication successful
+        
+        if (password==seller.password) {
+         
           return res.status(200).json({ message: 'Login successful' });
         } else {
-          // Passwords do not match, authentication failed
+         
           return res.status(401).json({ message: 'Invalid username or password' });
         }
       } else {
-        // Seller not found, authentication failed
+       
         return res.status(401).json({ message: 'Invalid username or password' });
       }
     } catch (error) {
@@ -537,14 +634,115 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
 
 
+  const storagesalon = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads');
+    },
+    filename: function (req, file, cb) {
+        const title = req.body.title || 'untitled';
+        const address = req.body.address || 'noaddress'; 
+        const ext = file.originalname.split('.').pop();
+        const filename = `${title}_${address}.${ext}`;
+        cb(null, filename);
+    }
+});
+const storage= multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'uploads');
+  },
+  filename: function (req, file, cb) {
+      const title = req.body.title || 'untitled';
+      const address = req.body.brand || 'nobc'; 
+ 
+      const ext = file.originalname.split('.').pop();
+ 
+      const filename = `${title}_${address}.${ext}`;
+ 
+      cb(null, filename);
+  }
+});
 
+const upload = multer({ storage: storage });
+const uploadsalon = multer({ storage: storagesalon });
+
+
+
+app.post('/csvupload',upload.single('file'), (req, res) => {
+  const file = req.file;
+  console.log(file)
+
+  fs.createReadStream(file.path)
+    .pipe(csv())
+    .on('data', async (row) => {
+      try {
+        console.log(row)
+        await BrandProducts.create(row);
+      } catch (error) {
+        console.error('Error creating product:', error);
+      }
+    })
+    .on('end', () => {
+      res.send('Products added successfully');
+    });
+});
+
+
+
+/**
+ * @swagger
+ * /productupload:
+ *   post:
+ *     summary: Upload product image and details
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         description: The image file to upload
+ *       - in: formData
+ *         name: title
+ *         type: string
+ *         description: Title of the product
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         description: Description of the product
+ *       - in: formData
+ *         name: pet_category
+ *         type: string
+ *         description: Category of the pet
+ *       - in: formData
+ *         name: product_category
+ *         type: string
+ *         description: Category of the product
+ *       - in: formData
+ *         name: quantity
+ *         type: integer
+ *         description: Quantity of the product available
+ *       - in: formData
+ *         name: price
+ *         type: number
+ *         description: Price of the product
+ *       - in: formData
+ *         name: brand
+ *         type: string
+ *         description: Brand code of the seller
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully
+ *       400:
+ *         description: No file uploaded
+ *       500:
+ *         description: Internal server error
+ */
   app.post('/productupload', upload.single('image'), (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
       }
       console.log(req.body)
-      const imageUrl = req.file.filename; // Get the filename of the uploaded image
+      const imageUrl = req.file.filename;
       console.log(imageUrl)
       const newProduct=new BrandProducts({
         title:req.body.title,
@@ -567,12 +765,58 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     }
   });
 
+  /**
+ * @swagger
+ * /delete/users/{username}:
+ *   delete:
+ *     summary: Delete user by username
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ * 
+ * 
+ */
+// admin users delete
+app.delete('/delete/users/:username', async (req, res) => {
+  const username = req.params.username;
+
+  try {
+    const deletedUser = await User.findOneAndDelete({ username });
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete the corresponding cache entry
+    const cacheKey = `user-data-${username}`;
+    await rclient.del(cacheKey);
+
+    res.status(200).json({ message: 'User deleted successfully', deletedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
   app.delete('/api/products/:id', async (req, res) => {
     const title = req.params.id;
   
     try {
-      // Assuming BrandProducts is your Mongoose model
+     
       const deletedProduct = await BrandProducts.findOneAndDelete({_id:title});
   
       if (!deletedProduct) {
@@ -585,6 +829,122 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  /**
+ * @swagger
+ * /api/salon/delete:
+ *   delete:
+ *     summary: Delete a salon by title
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Salon deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 deletedProduct:
+ *                   type: object
+ *       404:
+ *         description: Salon not found
+ *       500:
+ *         description: Internal server error
+ */
+  app.delete('/api/salon/delete', async (req, res) => {
+    const {title} = req.query;
+  
+    try {
+     
+      const deletedProduct = await Salon.findOneAndDelete({title:title});
+  
+      if (!deletedProduct) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      res.status(200).json({ message: 'Product deleted successfully', deletedProduct });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  // admin brands delete
+app.delete('/delete/brands/:brandname', async (req, res) => {
+  const brandname = req.params.brandname;
+
+  try {
+    const deletedBrand = await Brand.findOneAndDelete({ brandname });
+
+    if (!deletedBrand) {
+      return res.status(404).json({ message: 'Brand not found' });
+    }
+
+    // Delete the corresponding cache entry
+    const cacheKey = `seller-data-${deletedBrand.brandcode}`;
+    await rclient.del(cacheKey);
+
+    res.status(200).json({ message: 'Brand deleted successfully', deletedBrand });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+  /**
+ * @swagger
+ * /edit/{title}:
+ *   post:
+ *     summary: Edit product details
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         description: Title of the product to edit
+ *         schema:
+ *           type: string
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         description: Description of the product
+ *       - in: formData
+ *         name: pet_category
+ *         type: string
+ *         description: Category of the pet
+ *       - in: formData
+ *         name: product_category
+ *         type: string
+ *         description: Category of the product
+ *       - in: formData
+ *         name: quantity
+ *         type: integer
+ *         description: Quantity of the product available
+ *       - in: formData
+ *         name: price
+ *         type: number
+ *         description: Price of the product
+ *       - in: formData
+ *         name: image
+ *         type: string
+ *         description: Image URL of the product
+ *       - in: formData
+ *         name: brand
+ *         type: string
+ *         description: Brand code of the product
+ *     responses:
+ *       201:
+ *         description: Product edited successfully
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+
   app.post('/edit/:title', async (req, res) => {
     const title = req.params.title;
     console.log(title);
@@ -604,7 +964,78 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
           image: req.body.image,
           brandcode: req.body.brand,
         },
-        { new: true } // Return the updated document
+        { new: true } 
+      );
+  
+      if (!updatedProduct) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      res.status(201).json({ message: 'Product edited successfully', updatedProduct });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+
+  /**
+ * @swagger
+ * /salon/edit/{title}:
+ *   post:
+ *     summary: Edit salon details
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         description: Title of the salon to edit
+ *         schema:
+ *           type: string
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         description: Description of the salon
+ *       - in: formData
+ *         name: location
+ *         type: string
+ *         description: Location category of the salon
+ *       - in: formData
+ *         name: phoneNumber
+ *         type: string
+ *         description: Phone number of the salon
+ *       - in: formData
+ *         name: address
+ *         type: string
+ *         description: Address of the salon
+ *       - in: formData
+ *         name: image
+ *         type: string
+ *         description: Image URL of the salon
+ *     responses:
+ *       201:
+ *         description: Salon edited successfully
+ *       404:
+ *         description: Salon not found
+ *       500:
+ *         description: Internal server error
+ */
+   app.post('/salon/edit/:title', async (req, res) => {
+    const title = req.params.title;
+    console.log(title);
+    console.log(req.body.description);
+  
+    try {
+      const updatedProduct = await Salon.findOneAndUpdate(
+        { title: title },
+        {
+          title: req.body.title,
+          description: req.body.description,
+          location_category: req.body.location,
+          phoneNumber: req.body.phoneNumber,
+          address: req.body.address,
+          image: req.file.filename, 
+        },
+        { new: true } 
       );
   
       if (!updatedProduct) {
@@ -619,8 +1050,27 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
   });
   
 
+//router-level middleware
 
-  app.get('/api/products/:brandcode', async (req, res) => {
+/**
+ * @swagger
+ * /api/products/{brandcode}:
+ *   get:
+ *     summary: Get products by brand code
+ *     parameters:
+ *       - in: path
+ *         name: brandcode
+ *         required: true
+ *         description: Brand code of the products to fetch
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Products fetched successfully
+ *       500:
+ *         description: Internal server error
+ */
+  router.get('/api/products/:brandcode', async (req, res) => {
     try {
       const products = await BrandProducts.find({ brandcode: req.params.brandcode });
       console.log(products)
@@ -630,29 +1080,91 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/api/seller/:brandcode', async (req, res) => {
-    try {
-      const seller = await Brand.findOne({ brandcode: req.params.brandcode });
-      if (!seller) {
+ /**
+ * @swagger
+ * /api/seller/{brandcode}:
+ *   get:
+ *     summary: Get seller details by brand code
+ *     parameters:
+ *       - in: path
+ *         name: brandcode
+ *         required: true
+ *         description: Brand code of the seller to fetch
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Seller details fetched successfully
+ *       404:
+ *         description: Seller not found
+ *       500:
+ *         description: Internal server error
+ */
+ // Route to fetch seller data with caching
+app.get('/api/seller/:brandcode', async (req, res) => {
+  try {
+    const { brandcode } = req.params;
+    const cacheKey = `seller-data-${brandcode}`;
+    let sellerData = await rclient.get(cacheKey);
+
+    if (!sellerData) {
+      sellerData = await Brand.findOne({ brandcode });
+
+      if (!sellerData) {
         return res.status(404).json({ message: 'Seller not found' });
       }
-  
-      // Exclude sensitive information like password before sending the response
-      const sellerDetails = {
-        brandname: seller.brandname,
-        phoneNumber: seller.phoneNumber,
-        email: seller.email,
-        brandcode: seller.brandcode,
-      };
-  
-      res.json(sellerDetails);
-    } catch (error) {
-      console.error(`Error fetching details for ${req.params.brandcode}:`, error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
 
-  app.get('/products', async (req, res) => {
+      // Cache the seller data
+      await rclient.set(cacheKey, JSON.stringify(sellerData));
+      console.log(`Seller data for brandcode ${brandcode} set into Redis cache`);
+    } else {
+      console.log(`Seller data for brandcode ${brandcode} retrieved from Redis cache`);
+      sellerData = JSON.parse(sellerData);
+    }
+
+    const sellerDetails = {
+      brandname: sellerData.brandname,
+      phoneNumber: sellerData.phoneNumber,
+      email: sellerData.email,
+      brandcode: sellerData.brandcode,
+    };
+
+    res.json(sellerDetails);
+  } catch (error) {
+    console.error('Error retrieving seller data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Get products based on filters
+ *     parameters:
+ *       - in: query
+ *         name: specie
+ *         type: string
+ *         description: Specie of the products (e.g., dog, cat)
+ *       - in: query
+ *         name: brand
+ *         type: string
+ *         description: Brand code of the products
+ *       - in: query
+ *         name: price
+ *         type: string
+ *         description: Maximum price of the products
+ *       - in: query
+ *         name: category
+ *         type: string
+ *         description: Category of the products
+ *     responses:
+ *       200:
+ *         description: Products fetched successfully
+ *       500:
+ *         description: Internal server error
+ */
+
+  router.get('/products', async (req, res) => {
     console.log('Request received for /products');
     const { specie, brand, price, category } = req.query;
     console.log('hi');
@@ -678,12 +1190,30 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/salon/:location', async (req, res) => {
+
+
+  /**
+ * @swagger
+ * /salon/{location}:
+ *   get:
+ *     summary: Get salons by location
+ *     parameters:
+ *       - in: path
+ *         name: location
+ *         required: true
+ *         description: Location of the salons to fetch
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Salons fetched successfully
+ *       500:
+ *         description: Internal server error
+ */
+  router.get('/salon/:location', async (req, res) => {
+    
     const {location}=req.params
     
-   
-   
-  
     try {
      
   
@@ -693,14 +1223,27 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       });
     
       
-  
+ 
       res.json(salons);
     } catch (error) {
       console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  app.get('/salon', async (req, res) => {
+
+
+  /**
+ * @swagger
+ * /salon:
+ *   get:
+ *     summary: Get all salons
+ *     responses:
+ *       200:
+ *         description: Salons fetched successfully
+ *       500:
+ *         description: Internal server error
+ */
+  router.get('/salon', async (req, res) => {
     
   try {
      
@@ -715,7 +1258,41 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-
+  app.use('/',router)
+  /**
+ * @swagger
+ * /api/services:
+ *   get:
+ *     summary: Get all services
+ *     responses:
+ *       200:
+ *         description: List of services retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   userid:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   service:
+ *                     type: string
+ *                   slot:
+ *                     type: string
+ *                   addressValue:
+ *                     type: string
+ *                   accountValue:
+ *                     type: string
+ *                   dateCreated:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
   app.get('/api/services', async (req, res) => {
     try {
       const services = await salPayment.find();
@@ -726,11 +1303,205 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
   });
+  /**
+ * @swagger
+ * /api/booking:
+ *   get:
+ *     summary: Get bookings by title
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of bookings retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   userid:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   service:
+ *                     type: string
+ *                   slot:
+ *                     type: string
+ *                   addressValue:
+ *                     type: string
+ *                   accountValue:
+ *                     type: string
+ *                   dateCreated:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
   app.get('/api/booking', async (req, res) => {
     try {
       console.log('hi')
       const {title}=req.query;
       const services = await salPayment.find({title:title});
+      res.json(services);
+     
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
+  });
+
+
+  /**
+ * @swagger
+ * /uploadsalon:
+ *   post:
+ *     summary: Upload salon image and details
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               phoneNumber:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully
+ *       400:
+ *         description: No file uploaded
+ *       500:
+ *         description: Internal server error
+ */
+app.post('/uploadsalon', uploadsalon.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log(req.body)
+    const imageUrl = req.file.filename; 
+    console.log(imageUrl)
+    const newSalon = new Salon({
+      title: req.body.title,
+      description: req.body.description,
+      location_category: req.body.location,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address,
+      image: req.file.filename, 
+    });
+    newSalon.save();
+    return res.status(200).json({ imageUrl: imageUrl });
+  } catch (error) {
+    console.error('Error during image upload:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+   /**
+ * @swagger
+ * /salon/payments:
+ *   post:
+ *     summary: Store salon payment details
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userid:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               service:
+ *                 type: string
+ *               slot:
+ *                 type: string
+ *               addressValue:
+ *                 type: string
+ *               accountValue:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Payment details stored successfully
+ *       500:
+ *         description: Internal server error
+ */
+ 
+   app.post('/salon/payments', async (req, res) => {
+    try {
+      const { userid, title, service, slot, addressValue, accountValue } = req.body;
+      console.log(req.body)
+      const payment = new salPayment({ userid, title, service, slot, addressValue, accountValue });
+      await payment.save();
+      res.status(201).json({ message: 'Payment details stored successfully.' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  /**
+ * @swagger
+ * /api/service:
+ *   get:
+ *     summary: Get services by username
+ *     parameters:
+ *       - in: query
+ *         name: username
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of services retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   userid:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   service:
+ *                     type: string
+ *                   slot:
+ *                     type: string
+ *                   addressValue:
+ *                     type: string
+ *                   accountValue:
+ *                     type: string
+ *                   dateCreated:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
+  app.get('/api/service', async (req, res) => {
+    try {
+      console.log('hi')
+      const {username}=req.query;
+      console.log(username)
+      const services = await salPayment.find({userid:username});
       res.json(services);
      
     } catch (error) {
@@ -750,6 +1521,28 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
     res.sendFile(imagePath);
   });
 
+
+  /**
+ * @swagger
+ * /api/product/{title}/edit:
+ *   get:
+ *     summary: Get product details for editing
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         description: Title of the product to edit
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Product details fetched successfully
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal server error
+ */
+
   app.get('/api/product/:title/edit', (req, res) => {
     console.log('hi')
     BrandProducts.findOne({title:req.params.title})
@@ -760,8 +1553,32 @@ app.post('/csvupload',upload.single('file'), (req, res) => {
       .catch(err => console.log(err));
   });
   
-  
-// Define a route to fetch complaints
+  /**
+ * @swagger
+ * /api/complaints:
+ *   get:
+ *     summary: Get all complaints
+ *     responses:
+ *       200:
+ *         description: List of complaints retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *                   complaint:
+ *                     type: string
+ *                   suggestions:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/api/complaints', async (req, res) => {
   try {
     const complaints = await Complaint.find();
@@ -772,6 +1589,19 @@ app.get('/api/complaints', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/orders:
+ *   get:
+ *     summary: Get all orders
+ *     responses:
+ *       200:
+ *         description: List of orders fetched successfully
+ *       500:
+ *         description: Internal server error
+ */
+
 app.get('/api/orders', async (req, res) => {
   try {
     const complaints = await Order.find();
@@ -782,8 +1612,31 @@ app.get('/api/orders', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+/**
+ * @swagger
+ * /api/complaints:
+ *   post:
+ *     summary: Submit a complaint
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               complaintsEmail:
+ *                 type: string
+ *               complaints:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Complaint submitted successfully
+ *       500:
+ *         description: Internal server error
+ */
 
-//post complaints
 app.post("/api/complaints", async (req, res) => {
   try {
     const { name, complaintsEmail, complaints } = req.body;
@@ -802,7 +1655,22 @@ app.post("/api/complaints", async (req, res) => {
   }
 });
 
-//delete complaints
+/**
+ * @swagger
+ * /api/complaints/{id}:
+ *   delete:
+ *     summary: Delete a complaint by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Complaint deleted successfully
+ *       500:
+ *         description: Internal server error
+ */
 app.delete('/api/complaints/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -813,54 +1681,297 @@ app.delete('/api/complaints/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-//send mail
+
+/**
+ * @swagger
+ * /api/sendMail:
+ *   post:
+ *     summary: Send email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               complaint:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
+ *       500:
+ *         description: Failed to send email
+ */
+
+
 app.post('/api/sendMail', async (req, res) => {
   const { username, complaint } = req.body;
 
-  // Create a Nodemailer transporter using SMTP
+ 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.elasticemail.com', // SMTP host
-    port: 587, // SMTP port
-    secure: false, // true for 465, false for other ports
+    host: 'smtp.elasticemail.com', 
+    port: 587,
+    secure: false, 
     auth: {
-      user: 'programmingsoul01@gmail.com', // Your SMTP username
-      pass: '1CD368DF04529D0AE576788ABD7B3F78E10D', // Your SMTP password
+      user: 'programmingsoul01@gmail.com',
+      pass: '1CD368DF04529D0AE576788ABD7B3F78E10D',
     },
   });
 
-  //468117
-  // Email message options
+  
   const mailOptions = {
-    from: 'programmingsoul01@gmail.com', // Sender address
-    to: 'sathwikpendem23@gmail.com', // Receiver address
-    subject: 'complaint solved', // Subject line
-    text: `dear ${username} you're ${complaint} is resolved`, // Plain text body
+    from: 'programmingsoul01@gmail.com', 
+    to: 'sathwikpendem23@gmail.com',
+    subject: 'complaint solved',
+    text: `dear ${username} you're ${complaint} is resolved`, 
   };
 
   try {
-    // Send email
+    
     await transporter.sendMail(mailOptions);
     console.log('Email sent successfully');
-    res.sendStatus(200); // Send success response to the client
+    res.sendStatus(200); 
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ error: 'Failed to send email' }); // Send error response to the client
+    res.status(500).json({ error: 'Failed to send email' }); 
   }
 });
-
-app.get('/api/users/:username', async (req, res) => {
+/**
+ * @swagger
+ * /api/users/{username}:
+ *   get:
+ *     summary: Get user by username
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: User found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+// Middleware to cache user data from MongoDB to Redis
+const cacheMiddleware = async (req, res, next) => {
   try {
     const { username } = req.params;
-    console.log(username)
-    const user = await User.findOne({ username:username });
-    console.log(user)
-    res.json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+    const cacheKey = `user-data-${username}`;
+    let userData = await rclient.get(cacheKey);
 
+    if (!userData) {
+      userData = await User.findOne({ username: username });
+      rclient.set(cacheKey, JSON.stringify(userData));
+      console.log(`User data for ${username} set into Redis cache`);
+    } else {
+      console.log(`User data for ${username} retrieved from Redis cache`);
+      userData = JSON.parse(userData);
+    }
+
+    res.status(200).json(userData);
+  } catch (error) {
+    console.error('Error retrieving user data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// // // Route to fetch user data
+app.get('/api/users/:username', cacheMiddleware);
+/**
+ * @swagger
+ * /api/wishlist/{userId}:
+ *   get:
+ *     summary: Get user's wishlist
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User's wishlist retrieved successfully
+ *       500:
+ *         description: Internal Server Error
+ *
+ *   post:
+ *     summary: Add product to user's wishlist
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: Product added to wishlist successfully
+ *       400:
+ *         description: Product already exists in wishlist
+ *       500:
+ *         description: Internal Server Error
+ *
+ * /api/wishlist/{userId}/{title}:
+ *   delete:
+ *     summary: Remove product from user's wishlist
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         description: The title of the product
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Product removed from wishlist successfully
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/cart/{userId}:
+ *   get:
+ *     summary: Get user's cart
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User's cart retrieved successfully
+ *       500:
+ *         description: Internal Server Error
+ *
+ *   post:
+ *     summary: Add product to user's cart
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: Product added to cart successfully
+ *       400:
+ *         description: Product already exists in cart
+ *       500:
+ *         description: Internal Server Error
+ *
+ * /api/cart/{userId}/{title}:
+ *   delete:
+ *     summary: Remove product from user's cart
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: title
+ *         required: true
+ *         description: The title of the product
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Product removed from cart successfully
+ *       500:
+ *         description: Internal Server Error
+ *
+ *   put:
+ *     summary: Update product quantity in user's cart
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: producttitle
+ *         required: true
+ *         description: The title of the product
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Product quantity updated successfully
+ *       404:
+ *         description: Product not found in the cart
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /products/{producttitle}:
+ *   get:
+ *     summary: Get product details by title
+ *     parameters:
+ *       - in: path
+ *         name: producttitle
+ *         required: true
+ *         description: The title of the product
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Product details retrieved successfully
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Internal Server Error
+ */
 app.get('/api/wishlist/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -883,7 +1994,6 @@ app.post('/api/wishlist/:userId', async (req, res) => {
       wishlist = new Wishlist({ userId, products: [] });
     }
 
-    // Check if the product already exists in the wishlist by title
     const isProductExists = wishlist.products.some(p => p.title === product.title);
     if (!isProductExists) {
       wishlist.products.push(product);
@@ -939,17 +2049,16 @@ app.post('/api/cart/:userId', async (req, res) => {
       cart = new Cart({ userId, products: [] });
     }
 
-    // Check if the product already exists in the cart
     const existingProductIndex = cart.products.some((item) => item.title === product.title);
     
 
     if (!existingProductIndex) {
-      // If the product does not exist, add it to the cart
+  
       cart.products.push(product);
       await cart.save();
       res.json(cart);
     } else {
-      // If the product already exists, send a message indicating that
+   
       res.status(400).json({ message: 'Product already exists in Cart' });
     }
   } catch (error) {
@@ -988,14 +2097,12 @@ app.put('/api/cart/:userId/:producttitle', async (req, res) => {
       return res.status(404).json({ error: 'Cart not found' });
     }
 
-    // Find the index of the product in the cart
     const productIndex = cart.products.findIndex((item) => item.title === producttitle);
 
     if (productIndex === -1) {
       return res.status(404).json({ error: 'Product not found in the cart' });
     }
 
-    // Update the quantity of the product
     cart.products[productIndex].quantity = quantity;
 
     await cart.save();
@@ -1023,6 +2130,44 @@ app.get('/products/:producttitle', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+/**
+ * @swagger
+ * /salons/{title}:
+ *   get:
+ *     summary: Get a salon by title
+ *     parameters:
+ *       - in: path
+ *         name: title
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Salon details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 location_category:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 phoneNumber:
+ *                   type: string
+ *                 image:
+ *                   type: string
+ *       404:
+ *         description: Salon not found
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/salons/:title', async (req, res) => {
   try {
     console.log('hi')
@@ -1041,14 +2186,37 @@ app.get('/salons/:title', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
+/**
+ * @swagger
+ * /api/add-review:
+ *   post:
+ *     summary: Add a review
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userName:
+ *                 type: string
+ *               productTitle:
+ *                 type: string
+ *               reviewText:
+ *                 type: string
+ *               star:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Review added successfully
+ *       500:
+ *         description: Internal server error
+ */
 
 app.post('/api/add-review', async (req, res) => {
   try {
-    // Extract data from the request body
     const { userName, productTitle, reviewText,star } = req.body;
 
-    // Create a new review document
     const newReview = new Review({
       userName,
       productTitle,
@@ -1056,10 +2224,8 @@ app.post('/api/add-review', async (req, res) => {
       star
     });
 
-    // Save the review to the database
     await newReview.save();
 
-    // Respond with a success message
     res.status(201).json({ message: 'Review added successfully' });
   } catch (error) {
     console.error('Error adding review:', error);
@@ -1067,305 +2233,24 @@ app.post('/api/add-review', async (req, res) => {
   }
 });
 
-app.post('/api/orders/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { paymentDetails, products, totalAmount } = req.body;
-
-    // Create a new order
-    const order = new Order({
-      userId,
-      paymentDetails,
-      products,
-      totalAmount,
-    });
-
-    // Save the order to the database
-    await order.save();
-    for (const product of products) {
-      const { title, quantity, image } = product;
-
-      // Fetch the product from the brandproducts collection
-      const existingProduct = await BrandProducts.findOne({ title });
-
-      if (existingProduct) {
-        // Update available quantity
-        existingProduct.available -= quantity;
-        existingProduct.sold+=quantity;
-        await existingProduct.save();
-      }
-    }
-
-    res.status(201).json({ message: 'Order placed successfully' });
-  } catch (error) {
-    console.error('Error placing order:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.get('/orders', async (req, res) => {
-  try {
-    const { title } = req.query;
-    console.log(title)
-    const orders = await Order.find({ 'products.title': title });
-    res.json(orders);
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-app.get('/api/order', async (req, res) => {
-  try {
-    const { bc } = req.query;
-    
-    
-      // Find orders that contain products with the given brand code
-      const orders = await Order.find({ 'products.brandcode': bc });
-
-      // Filter products with the given brand code for each order
-      const ordersWithFilteredProducts = orders.map(order => {
-          const productsWithBrandCode = order.products.filter(product => product.brandcode === bc);
-          return {
-              orderId: order._id,
-              userId: order.userId,
-              paymentDetails: order.paymentDetails,
-              products: productsWithBrandCode,
-              totalAmount: order.totalAmount,
-              dateCreated: order.dateCreated
-          };
-      });
-
-      res.json(ordersWithFilteredProducts);
-  } catch (error) {
-      console.error('Error retrieving orders:', error);
-      res.status(500).json({ error: 'An error occurred while retrieving orders' });
-  }
-    
-  
-});
-
-
-app.post('/users/names', async (req, res) => {
-  try {
-    const { userIds } = req.body;
-    const users = await User.find({ _id: { $in: userIds } });
-    const userNames = {};
-    users.forEach(user => {
-      userNames[user._id] = user.name;
-    });
-    res.json(userNames);
-  } catch (error) {
-    console.error('Error fetching user names:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-// Assuming you have a route setup for handling search requests
-app.post('/search1', (req, res) => {
-  const query = req.body.payload;
-  // Your logic to search for products based on the query
-  // For example, searching in a database
-  BrandProducts.find({ title: { $regex: query, $options: 'i' } })
-    .then(products => {
-      res.json(products);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
-});
-
-
-// admin users fetch
-app.get('/fetchusers',async(req,res)=>{
-  try{
-    const users = await User.find();
-    res.json(users);
-  }catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-})
-
-// admin users delete
-app.delete('/delete/users/:username', async (req, res) => {
-  const username = req.params.username;
-
-  try {
-   
-    const deletedUser= await User.findOneAndDelete({username:username});
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({ message: 'User deleted successfully', deletedUser });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// admin brands fetch
-app.get('/fetchbrands',async(req,res)=>{
-  try{
-    const brands = await Brand.find();
-    res.json(brands);
-  }catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-})
-
-// admin brands delete
-app.delete('/delete/brands/:brandname', async (req, res) => {
-  const brandname = req.params.brandname;
-
-  try {
-   
-    const deletedBrand= await Brand.findOneAndDelete({brandname:brandname});
-
-    if (!deletedBrand) {
-      return res.status(404).json({ message: 'Brand not found' });
-    }
-
-    res.status(200).json({ message: 'Brand deleted successfully', deletedBrand });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// functiom for brand Insights
-app.get('/fetchbrandinsights', async (req, res) => {
-  try {
-    const brandProducts = await BrandProducts.find().exec();
-
-    const brandTotalItems = {};
-
-    brandProducts.forEach((product) => {
-      const { brandcode, available } = product;
-
-      if (!brandTotalItems[brandcode]) {
-        brandTotalItems[brandcode] = 0;
-      }
-
-      brandTotalItems[brandcode] += available;
-    });
-
-    const brands = await Brand.find().exec();
-
-    brands.forEach((brand) => {
-      const { brandcode } = brand;
-
-      if (brandTotalItems[brandcode]) {
-        brand.totalItems = brandTotalItems[brandcode];
-      } else {
-        brand.totalItems = 0;
-      }
-    });
-
-    console.log(brandTotalItems);
-    res.json(brandTotalItems);
-  } catch (error) {
-    console.error('Error fetching data about brands:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.get('/fetchproducts/:brandname', async (req, res) => {
-  const brandname = req.params.brandname;
-  console.log(brandname)
-  try {
-    // Replace with your database query to fetch products for the given brand
-    const products = await BrandProducts.find({brandcode:brandname});
-   
-    res.json(products);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.get('/fetchusersinsights',async (req,res) => {
-  try {
-    const usertotalprices = {};
-    const cursor = await Order.find({}).sort({ userId: 1, totalAmount: -1 }).cursor();
-    let result = [];
-    let currentUserId = null;
-    let currentUserTotal = 0;
-
-    await cursor.eachAsync(doc => {
-      if (doc.userId !== currentUserId) {
-        if (currentUserId !== null) {
-          result.push({ userId: currentUserId, totalPrices: currentUserTotal });
-        }
-        currentUserId = doc.userId;
-        currentUserTotal = doc.totalAmount;
-      } else {
-        currentUserTotal += doc.totalAmount;
-      }
-    });
-
-    // Push the last user
-    if (currentUserId !== null) {
-      result.push({ userId: currentUserId, totalPrices: currentUserTotal });
-    }
-
-    // Sort the result array by totalPrices in descending order
-    result.sort((a, b) => b.totalPrices - a.totalPrices);
-
-    // Get the top 10
-    const top10 = result.slice(0, 10);
-    top10.forEach((top)=>{
-      const user = top.userId;
-      usertotalprices[user] = top.totalPrices;
-    })
-
-    res.json(usertotalprices)
-    console.log(usertotalprices)
-
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-)
-
-//count
-//users
-
-app.get('/api/user/total', async (req, res) => {
-  try {
-    const totalusers = await User.countDocuments();
-    res.json({totalusers})
-  } catch (error) {
-    console.error('Error fetching total users:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-//sellers
-app.get('/api/sellerss/total', async (req, res) => {
-  try {
-      const totalsellers = await Brand.countDocuments();
-      res.json({ totalsellers });
-  } catch (error) {
-      console.error('Error fetching total users:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-//products
-app.get('/api/productss/total', async (req, res) => {
-  try {
-      const totalproducts = await BrandProducts.countDocuments();
-      res.json({ totalproducts });
-     
-  } catch (error) {
-      console.error('Error fetching total users:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-//complaints
+/**
+ * @swagger
+ * /api/complaintss/total:
+ *   get:
+ *     summary: Get the total number of complaints
+ *     responses:
+ *       200:
+ *         description: Total number of complaints retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalcomplaints:
+ *                   type: number
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/api/complaintss/total', async (req, res) => {
   try {
       const totalcomplaints = await Complaint.countDocuments();
@@ -1375,7 +2260,24 @@ app.get('/api/complaintss/total', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-//salons
+/**
+ * @swagger
+ * /api/salonss/total:
+ *   get:
+ *     summary: Get the total number of salons
+ *     responses:
+ *       200:
+ *         description: Total number of salons retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalsalons:
+ *                   type: number
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/api/salonss/total', async (req, res) => {
   try {
       const totalsalons = await Salon.countDocuments();
@@ -1386,15 +2288,31 @@ app.get('/api/salonss/total', async (req, res) => {
   }
 });
 
+app.post('/api/search', async (req, res) => {
+  const { payload } = req.body;
+  try {
+    // Using regex to perform case-insensitive search
+    const results = await BrandProducts.find({ title: { $regex: new RegExp('^' + payload + '.*', 'i') } });
+    res.json(results);
+  } catch (error) {
+    console.error('Error searching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
+app.get('/api/search', async (req, res) => {
+  const { query } = req.query;
+  const payload = query; // Create regex pattern
 
-
-
-
-
-
-
+  try {
+    const results = await BrandProducts.find({ title: { $regex: new RegExp('^' + payload + '.*', 'i') } });
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
