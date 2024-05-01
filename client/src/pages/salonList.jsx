@@ -28,7 +28,7 @@ const SaloonList = () => {
 
   const fetchSalons = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/salon/${location}`);
+      const response = await fetch(`https://petverse-3.onrender.com/salon/${location}`);
 
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
@@ -54,7 +54,7 @@ const SaloonList = () => {
           <>
           <div className="saloon-container1" style={{ display: 'flex' }}>
             <div className="image-container">
-              <Image src={`http://localhost:3002/uploads/${item.image}`} alt="Your Image" className="img-fluid" boxSize='1rem' style={{  height: 'auto', width: '118%',
+              <Image src={`https://petverse-3.onrender.com/uploads/${item.image}`} alt="Your Image" className="img-fluid" boxSize='1rem' style={{  height: 'auto', width: '118%',
     
     marginTop: '8rem',
     marginLeft: '6rem' }}
