@@ -29,7 +29,7 @@ const AdminProducts = () => {
           console.log(specieFilter)
           console.log(categoryFilter)
          
-          const response = await fetch(`http://localhost:3002/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
+          const response = await fetch(`https://petverse-3.onrender.com/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
           
           // Check if the response is not successful (status code other than 200)
           if (!response.ok) {
@@ -48,7 +48,7 @@ const AdminProducts = () => {
       };
       const deleteProduct = async (title) => {
         try {
-            const response = await fetch(`http://localhost:3002/api/products/${title}`, {
+            const response = await fetch(`https://petverse-3.onrender.com/api/products/${title}`, {
                 method: 'DELETE',
             });
 
@@ -81,7 +81,7 @@ const AdminProducts = () => {
                    
                    
               <Image
-                src={`http://localhost:3002/uploads/${item.image}`}
+                src={`https://petverse-3.onrender.com/uploads/${item.image}`}
                 alt={item.title}
                 objectFit="cover"
                 boxSize="20vw"
