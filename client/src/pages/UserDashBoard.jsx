@@ -3,7 +3,7 @@ import { Box, Button, Divider } from '@chakra-ui/react';
 import { AiFillEdit } from 'react-icons/ai';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Details from '../componants/Dashboard/Details';
+import Details from '../componants/DashBoard/Details'
 import Header from '../componants/Header';
 import UserOrders from './UserOrders';
 
