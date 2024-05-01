@@ -42,7 +42,7 @@ const ProductsCard = ({ image, title, description, price }) => {
             <Card style={{ margin: '2rem', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', border:'0', width: '100rem',
     height: '40rem'}}>
             <div style={{border:'0.1px solid black'}}>
-                <Image  src={`http://localhost:3002/uploads/${image}`} alt={title}  boxSize='35vw'/>
+                <Image  src={`https://petverse-3.onrender.com/uploads/${image}`} alt={title}  boxSize='35vw'/>
                 </div>
                 <div style={{ margin: '2rem', width: '40vw',border:'0' }}>
                     <Card.Title style={{ fontSize: '2vw', marginTop: '3vw', display: 'flex', justifyContent: 'center' }}>{title}</Card.Title>
