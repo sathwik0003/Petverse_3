@@ -11,7 +11,7 @@ const SellerOrders = ({ bc }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`http://localhost:3002/api/order?bc=${bc}`);
+        const response = await fetch(`https://petverse-3.onrender.com/api/order?bc=${bc}`);
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
