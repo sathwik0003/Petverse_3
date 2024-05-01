@@ -39,7 +39,7 @@ const Productpage = () => {
       if (!wishlist.some((item) => item.title === product.title)) {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
 
-        const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`, {
+        const response = await fetch(`https://petverse-3.onrender.com/api/wishlist/${userid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const Productpage = () => {
         const { id, title, description, pet_category, product_category, available, price, image, brandcode } = product;
         
        
-        const response = await fetch(`http://localhost:3002/api/cart/${userid}`, {
+        const response = await fetch(`https://petverse-3.onrender.com/api/cart/${userid}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const Productpage = () => {
     try {
      
 
-      const response = await fetch(`http://localhost:3002/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
+      const response = await fetch(`https://petverse-3.onrender.com/products?specie=${specieFilter}&brand=${brandFilter}&price=${priceFilter}&category=${categoryFilter}`);
 
       // Check if the response is not successful (status code other than 200)
       if (!response.ok) {
@@ -211,7 +211,7 @@ const Productpage = () => {
 
             <Link to={`/product/${userid}/${item.title}`}>
               <Image
-                 src={`http://localhost:3002/uploads/${item.image}`}
+                 src={`https://petverse-3.onrender.com/uploads/${item.image}`}
                 alt={item.title}
                 objectFit="cover"
                 boxSize="20vw"
