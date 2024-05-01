@@ -1,6 +1,6 @@
 
 import { Routes, Route } from 'react-router-dom';
-import Run from './pages/run';
+import Run from './pages/Run';
 import SellerLogin from './pages/SellerLogin';
 import SellerSignup from './pages/SellerSignup';
 import PetListingPage from './pages/PetListingPage';
