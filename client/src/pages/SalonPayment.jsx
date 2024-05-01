@@ -74,7 +74,7 @@ const SalonPayment = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3002/salon/payments', {
+      const response = await fetch('https://petverse-3.onrender.com/salon/payments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
