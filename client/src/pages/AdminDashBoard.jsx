@@ -76,11 +76,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchTotalUsers = async () => {
       try {
-        const responseu = await fetch('http://localhost:3002/api/user/total');
+        const responseu = await fetch('https://petverse-3.onrender.com/api/user/total');
         if (!responseu.ok) {
           throw new Error(`Error: ${responseu.statusText}`);
         }
-        const responsese = await fetch('http://localhost:3002/api/sellerss/total');
+        const responsese = await fetch('https://petverse-3.onrender.com/api/sellerss/total');
         if (!responsese.ok) {
           throw new Error(`Error: ${responsese.statusText}`);
         }
@@ -88,11 +88,11 @@ const AdminDashboard = () => {
         if (!responsep.ok) {
           throw new Error(`Error: ${responsep.statusText}`);
         }
-        const responsec = await fetch('http://localhost:3002/api/complaintss/total');
+        const responsec = await fetch('https://petverse-3.onrender.com/api/complaintss/total');
         if (!responsec.ok) {
           throw new Error(`Error: ${responsec.statusText}`);
         }
-        const responsesa = await fetch('http://localhost:3002/api/salonss/total');
+        const responsesa = await fetch('https://petverse-3.onrender.com/api/salonss/total');
         if (!responsesa.ok) {
           throw new Error(`Error: ${responsesa.statusText}`);
         }
