@@ -26,7 +26,7 @@ const BrandDashBoard = () => {
 
   useEffect(() => {
     // Make a GET request to fetch seller details based on brandcode
-    fetch(`http://localhost:3002/api/seller/${bc}`)
+    fetch(`https://petverse-3.onrender.com/api/seller/${bc}`)
       .then(response => response.json())
       .then(data => setUserDetails(data))
       .catch(error => console.error(`Error fetching seller details for ${bc}:`, error));
