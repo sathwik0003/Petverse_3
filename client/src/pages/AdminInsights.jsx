@@ -10,7 +10,7 @@ const AdminInsights = () => {
 
   const fetchBrandData = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/fetchbrandinsights`);
+      const response = await fetch(`https://petverse-3.onrender.com/fetchbrandinsights`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -22,7 +22,7 @@ const AdminInsights = () => {
   };
   const fetchUsersData = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/fetchusersinsights`);
+      const response = await fetch(`https://petverse-3.onrender.com/fetchusersinsights`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
