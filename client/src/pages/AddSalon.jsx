@@ -93,7 +93,7 @@ const {
       formData.append('image', file);
       console.log(file)
 
-      const response = await fetch('http://localhost:3002/uploadsalon', {
+      const response = await fetch('https://petverse-3.onrender.com/uploadsalon', {
         method: 'POST',
         body: formData,
         encType:'multipart/form'
