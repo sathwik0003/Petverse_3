@@ -11,7 +11,7 @@ const AdminSalon = () => {
 
   const fetchSalons = async () => {
     try {
-      const response = await fetch('http://localhost:3002/salon');
+      const response = await fetch('https://petverse-3.onrender.com/salon');
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
@@ -24,7 +24,7 @@ const AdminSalon = () => {
 
   const deleteProduct = async (title) => {
     try {
-        const response = await fetch(`http://localhost:3002/api/salon/${title}`, {
+        const response = await fetch(`https://petverse-3.onrender.com/api/salon/${title}`, {
             method: 'DELETE',
         });
 
@@ -52,7 +52,7 @@ const AdminSalon = () => {
             <div key={item._id} className="saloon-container1">
               <div className="image-container">
                 <img
-                  src={`http://localhost:3002/uploads/${item.image}`}
+                  src={`https://petverse-3.onrender.com/uploads/${item.image}`}
                   alt="Salon Image"
                   className="img-fluid"
                   style={{ height: '13rem', margin:'3rem 1rem' }}
