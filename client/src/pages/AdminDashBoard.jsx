@@ -7,7 +7,7 @@ import {
   faRupeeSign,
   faCut,
 } from '@fortawesome/free-solid-svg-icons';
-import './AdminDashboard.css';
+import './AdminDashBoard.css';
 import SidebarAdmin from '../componants/Admin/SideBarAdmin';
 import AdminHeader from '../componants/Admin/AdminHeader';
 import { Link } from 'react-router-dom';
