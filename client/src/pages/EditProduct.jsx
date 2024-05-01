@@ -76,7 +76,7 @@ const Editproduct = () => {
 
       const getProductDetails = async (title) => {
         try {
-          const response = await fetch(`http://localhost:3002/api/product/${title}/edit`);
+          const response = await fetch(`https://petverse-3.onrender.com/api/product/${title}/edit`);
           
           if (response.ok) {
             const productDetails = await response.json();
@@ -106,7 +106,7 @@ const Editproduct = () => {
         console.log('ok')
         try {
             console.log(title)
-          const response = await fetch(`http://localhost:3002/edit/${title}`, {
+          const response = await fetch(`https://petverse-3.onrender.com/edit/${title}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
