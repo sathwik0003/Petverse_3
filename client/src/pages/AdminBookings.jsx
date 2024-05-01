@@ -11,7 +11,7 @@ const AdminBookings = () => { // Changed component name to start with uppercase
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/api/booking?title=${title}`);
+      const response = await fetch(`https://petverse-3.onrender.com/api/booking?title=${title}`);
       if (!response.ok) {
         throw new Error('Failed to fetch services');
       }
