@@ -13,7 +13,7 @@ const SellerSingle = () => {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/products/${title}`);
+                const response = await fetch(`https://petverse-3.onrender.com/products/${title}`);
 
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
