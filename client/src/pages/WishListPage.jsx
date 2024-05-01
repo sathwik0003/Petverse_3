@@ -13,7 +13,7 @@ const WishlistPage = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        const response = await fetch(`http://localhost:3002/api/wishlist/${userid}`);
+        const response = await fetch(`https://petverse-3.onrender.com/api/wishlist/${userid}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -30,7 +30,7 @@ const WishlistPage = () => {
 
   const removeFromWishlist = async (title) => {
     try {
-      const response = await fetch(`http://localhost:3002/api/wishlist/${userid}/${title}`, {
+      const response = await fetch(`https://petverse-3.onrender.com/api/wishlist/${userid}/${title}`, {
         method: 'DELETE',
       });
 
@@ -69,7 +69,7 @@ const WishlistPage = () => {
         ) : (
           wishlist.products.map((product) => (
             <div key={product.id} className="ppcard">
-              <Image src={`http://localhost:3002/uploads/${product.image}`} alt={product.title} objectFit="cover" boxSize="20vw" />
+              <Image src={https://petverse-3.onrender.com/uploads/${product.image}`} alt={product.title} objectFit="cover" boxSize="20vw" />
               <div style={{ backgroundColor: 'white' }}>
                 <div style={{ color: '#212529b5', fontSize: '1vw', marginLeft: '2vw' }}>
                   {product.brandName}
