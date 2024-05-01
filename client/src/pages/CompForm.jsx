@@ -22,7 +22,7 @@ function ComplaintsForm() {
   
     try {
       // Send form data to the server
-      const response = await fetch("http://localhost:3002/api/complaints", {
+      const response = await fetch("https://petverse-3.onrender.com/api/complaints", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
