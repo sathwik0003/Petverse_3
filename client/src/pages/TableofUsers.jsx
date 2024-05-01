@@ -44,7 +44,7 @@ const TableofUsers = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch(`http://localhost:3002/fetchusers`);
+            const response = await fetch(`https://petverse-3.onrender.com/fetchusers`);
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
@@ -62,7 +62,7 @@ const TableofUsers = () => {
 
     const deleteUser = async (username) => {
         try {
-            const response = await fetch(`http://localhost:3002/delete/users/${username}`, {
+            const response = await fetch(`https://petverse-3.onrender.com/delete/users/${username}`, {
                 method: 'DELETE',
             });
 
