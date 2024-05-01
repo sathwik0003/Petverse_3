@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install frontend dependencies
+      run: cd client && npm install
+
+    - name: Run frontend tests
+      run: cd client && npm test
+
+    - name: Install backend dependencies
+      run: cd backend && npm install
+
+    - name: Run backend tests
+      run: cd backend && npm test
