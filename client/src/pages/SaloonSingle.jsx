@@ -14,7 +14,7 @@ const SaloonSingle = () => {
     const fetchSalonDetails = async () => {
       try {
         console.log('hi')
-        const response = await fetch(`http://localhost:3002/salons/${title}`);
+        const response = await fetch(`https://petverse-3.onrender.com/salons/${title}`);
 
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -38,7 +38,7 @@ const SaloonSingle = () => {
       {salon && (
         <SaloonDetails
           title={title}
-          src={`http://localhost:3002/uploads/${salon.image}`}
+          src={`https://petverse-3.onrender.com/uploads/${salon.image}`}
           description={salon.description}
           address={salon.address}
           phone={salon.phoneNumber}
