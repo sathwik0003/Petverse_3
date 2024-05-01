@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductsCard from './ProductsCard';
 
-import Reviews from './reviews';
+// import Reviews from './reviews';
 import { useParams } from 'react-router-dom';
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
