@@ -2320,6 +2320,27 @@ app.get('/api/salonss/total', async (req, res) => {
   }
 });
 
+app.get('/api/sellerss/total', async (req, res) => {
+  try {
+      const totalsellers = await Brand.countDocuments();
+      res.json({ totalsellers });
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/productss/total', async (req, res) => {
+  try {
+      const totalproducts = await BrandProducts.countDocuments();
+      res.json({ totalproducts });
+     
+  } catch (error) {
+      console.error('Error fetching total users:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/api/search', async (req, res) => {
   const { payload } = req.body;
   try {
