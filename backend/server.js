@@ -833,6 +833,17 @@ app.get('/fetchusers', async (req, res) => {
   }
 })
 
+// admin brands fetch
+app.get('/fetchbrands', async (req, res) => {
+  try {
+    const brands = await Brand.find();
+    res.json(brands);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
   app.delete('/api/products/:id', async (req, res) => {
     const title = req.params.id;
   
