@@ -822,6 +822,17 @@ app.get('/api/user/total', async (req, res) => {
   }
 });
 
+// admin users fetch
+app.get('/fetchusers', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
   app.delete('/api/products/:id', async (req, res) => {
     const title = req.params.id;
   
