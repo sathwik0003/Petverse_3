@@ -863,7 +863,7 @@ app.get('/fetchbrands', async (req, res) => {
   
     try {
      
-      const deletedProduct = await BrandProducts.findOneAndDelete({_id:title});
+      const deletedProduct = await BrandProducts.findOneAndDelete({title:title});
   
       if (!deletedProduct) {
         return res.status(404).json({ message: 'Product not found' });
