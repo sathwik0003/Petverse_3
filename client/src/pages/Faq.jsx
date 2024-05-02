@@ -34,7 +34,7 @@ const FrequentlyAskedQuestions = () => {
       <div className="faqheading">
         <img src={dog} style={{height: '23rem',
     width: '85rem'}}></img>
-        <h1 className="faqhead">Frequently Asked Questions</h1>
+        <h1 className="faqhead">Fsd evalution Questions</h1>
       </div>
       <div className="faqsidehead">
         <h2>Safety</h2>
