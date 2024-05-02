@@ -812,6 +812,16 @@ app.delete('/delete/users/:username', async (req, res) => {
   }
 });
 
+app.get('/api/user/total', async (req, res) => {
+  try {
+    const totalusers = await User.countDocuments();
+    res.json({ totalusers })
+  } catch (error) {
+    console.error('Error fetching total users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
   app.delete('/api/products/:id', async (req, res) => {
     const title = req.params.id;
   
