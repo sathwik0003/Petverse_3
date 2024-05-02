@@ -15,7 +15,7 @@ const AdminBrandProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(https://petverse-3.onrender.com/fetchproducts/${brandname}`);
+      const response = await fetch(`https://petverse-3.onrender.com/fetchproducts/${brandname}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
