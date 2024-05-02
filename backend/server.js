@@ -745,6 +745,41 @@ const upload = multer({ storage: storage });
 const uploadsalon = multer({ storage: storagesalon });
 
 
+app.post('/api/orders/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { paymentDetails, products, totalAmount } = req.body;
+
+    // Create a new order
+    const order = new Order({
+      userId,
+      paymentDetails,
+      products,
+      totalAmount,
+    });
+
+    // Save the order to the database
+    await order.save();
+    for (const product of products) {
+      const { title, quantity, image } = product;
+
+      // Fetch the product from the brandproducts collection
+      const existingProduct = await BrandProducts.findOne({ title });
+
+      if (existingProduct) {
+        // Update available quantity
+        existingProduct.available -= quantity;
+        existingProduct.sold+=quantity;
+        await existingProduct.save();
+      }
+    }
+
+    res.status(201).json({ message: 'Order placed successfully' });
+  } catch (error) {
+    console.error('Error placing order:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.post('/csvupload',upload.single('file'), (req, res) => {
   const file = req.file;
