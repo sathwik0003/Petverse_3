@@ -17,7 +17,7 @@ const AddtoCart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch(https://petverse-3.onrender.com/api/cart/${userid}`);
+        const response = await fetch(`https://petverse-3.onrender.com/api/cart/${userid}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -83,7 +83,7 @@ const AddtoCart = () => {
  
   const removeFromCart = async (title) => {
     try {
-      const response = await fetch(`http://localhost:3002/api/cart/${userid}/${title}`, {
+      const response = await fetch(`https://petverse-3.onrender.com/api/cart/${userid}/${title}`, {
         method: 'DELETE',
       });
 
@@ -116,7 +116,7 @@ const AddtoCart = () => {
       <div className="mainproduct1">
         {cart.products.map((item) => (
           <div key={item.id} className="ppcard">
-            <Image  src={`http://localhost:3002/uploads/${item.image}`} alt={item.title} objectFit="cover" boxSize="20vw" />
+            <Image  src={`https://petverse-3.onrender.com/uploads/${item.image}`} alt={item.title} objectFit="cover" boxSize="20vw" />
             <div style={{ backgroundColor: "white" }}>
               <div style={{ color: "#212529b5", fontSize: "1vw", marginLeft: "2vw" }}>
                 {item.brandName}
