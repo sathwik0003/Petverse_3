@@ -24,7 +24,7 @@ const options={
 		},
 		servers:[{
 
-			url: 'http://localhost:3002/'
+			url: 'https://petverse-3.onrender.com/'
 		}
 
 		]
